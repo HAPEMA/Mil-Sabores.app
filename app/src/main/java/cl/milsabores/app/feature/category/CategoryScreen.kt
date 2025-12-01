@@ -1,5 +1,6 @@
 package cl.milsabores.app.feature.category
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,12 +13,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cl.milsabores.app.core.domain.model.ProductsStore
 import cl.milsabores.app.core.ui.components.MilSaboresTopBar
 import cl.milsabores.app.core.ui.theme.CremaFondo
 import cl.milsabores.app.core.ui.theme.MarronBoton
+import cl.milsabores.app.core.domain.model.Category
 
 @Composable
 fun CategoryScreen(
@@ -28,6 +31,7 @@ fun CategoryScreen(
     onDone: () -> Unit
 ) {
     val name = remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -90,20 +94,39 @@ fun CategoryScreen(
                     Button(
                         onClick = {
                             val text = name.value.trim()
-                            if (text.isNotEmpty()) {
-                                val id = text.lowercase()
-                                    .replace(" ", "_")
-                                    .replace(Regex("[^a-z0-9_]"), "")
-                                val exists = ProductsStore.categories.any { it.id == id }
-                                if (!exists) {
-                                    ProductsStore.categories.add(
-                                        cl.milsabores.app.core.domain.model.Category(
-                                            id = id,
-                                            name = text
-                                        )
+                            if (text.isEmpty()) {
+                                Toast.makeText(
+                                    context,
+                                    "Escribe un nombre de categoría",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return@Button
+                            }
+
+                            val id = text.lowercase()
+                                .replace(" ", "_")
+                                .replace(Regex("[^a-z0-9_]"), "")
+
+                            val exists = ProductsStore.categories.any { it.id == id }
+                            if (exists) {
+                                Toast.makeText(
+                                    context,
+                                    "Ya existe una categoría con ese nombre",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                ProductsStore.categories.add(
+                                    Category(
+                                        id = id,
+                                        name = text
                                     )
-                                    name.value = ""
-                                }
+                                )
+                                name.value = ""
+                                Toast.makeText(
+                                    context,
+                                    "Categoría agregada",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
@@ -147,10 +170,14 @@ fun CategoryScreen(
                             )
 
                             IconButton(onClick = {
-                                // borrar productos de esa categoría
                                 ProductsStore.products.removeAll { it.categoryId == category.id }
-                                // borrar categoría
                                 ProductsStore.categories.remove(category)
+
+                                Toast.makeText(
+                                    context,
+                                    "Categoría eliminada",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,

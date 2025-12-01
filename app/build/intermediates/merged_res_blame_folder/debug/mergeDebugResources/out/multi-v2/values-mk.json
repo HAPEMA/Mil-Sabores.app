@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "cl.milsabores.app-mergeDebugResources-2:/values-mk/values-mk.xml",
+            "outputFile": "cl.milsabores.app-mergeDebugResources-52:/values-mk/values-mk.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Soporte Ti\\.gradle\\caches\\8.13\\transforms\\90c1df8dbaee76ed4245be0e714da592\\transformed\\material3-release\\res\\values-mk\\values-mk.xml",
+                    "source": "C:\\Users\\EQUIPO\\.gradle\\caches\\8.13\\transforms\\8f1a082bd9335668a4b855fcf78202ca\\transformed\\jetified-material3-release\\res\\values-mk\\values-mk.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Soporte Ti\\.gradle\\caches\\8.13\\transforms\\591f025e3a8e6bb7ab1a9803cfac5c5f\\transformed\\foundation-release\\res\\values-mk\\values-mk.xml",
+                    "source": "C:\\Users\\EQUIPO\\.gradle\\caches\\8.13\\transforms\\fb873b8cd135d7daf38847b3a71b53f9\\transformed\\jetified-foundation-release\\res\\values-mk\\values-mk.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
@@ -38,7 +38,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Soporte Ti\\.gradle\\caches\\8.13\\transforms\\f04ead4dba84455ae90c38afcf58222c\\transformed\\core-1.13.1\\res\\values-mk\\values-mk.xml",
+                    "source": "C:\\Users\\EQUIPO\\.gradle\\caches\\8.13\\transforms\\f04ead4dba84455ae90c38afcf58222c\\transformed\\core-1.13.1\\res\\values-mk\\values-mk.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -55,7 +55,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Soporte Ti\\.gradle\\caches\\8.13\\transforms\\5344da9c3a3db9fb71c1664b881bc82e\\transformed\\ui-release\\res\\values-mk\\values-mk.xml",
+                    "source": "C:\\Users\\EQUIPO\\.gradle\\caches\\8.13\\transforms\\27d5d63952387873139cdccd419a39ca\\transformed\\jetified-ui-release\\res\\values-mk\\values-mk.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

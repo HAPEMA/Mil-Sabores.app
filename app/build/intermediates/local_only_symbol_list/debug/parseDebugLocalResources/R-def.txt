@@ -10,7 +10,6 @@ color white
 drawable bg_header
 drawable ic_launcher_background
 drawable ic_launcher_foreground
-drawable ic_profile_placeholder
 drawable logo_cupcake
 drawable logo_nombre
 drawable metodos_pago

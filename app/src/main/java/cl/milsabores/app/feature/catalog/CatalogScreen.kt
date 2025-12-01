@@ -1,5 +1,6 @@
 package cl.milsabores.app.feature.catalog
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cl.milsabores.app.core.domain.model.Product
@@ -30,6 +32,7 @@ fun CatalogScreen(
     onGoProfile: () -> Unit,
     onDone: () -> Unit
 ) {
+    val context = LocalContext.current
     val name = remember { mutableStateOf("") }
     val categoryId = remember { mutableStateOf(ProductsStore.categories.first().id) }
     val price = remember { mutableStateOf("") }
@@ -49,21 +52,25 @@ fun CatalogScreen(
                 onGoCart = onGoCart,
                 onGoProfile = onGoProfile
             )
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-            Text(
-                text = "Agregar producto",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(top = 8.dp, bottom = 12.dp)
-            )
+                Text(
+                    text = "Agregar producto",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(top = 8.dp, bottom = 12.dp)
+                        .weight(1f)
+                )
+
                 TextButton(onClick = onDone) {
                     Text("Cerrar")
                 }
             }
+
             Spacer(Modifier.height(12.dp))
 
             Card(
@@ -112,25 +119,39 @@ fun CatalogScreen(
 
                     Button(
                         onClick = {
-                            val priceInt = price.value.toIntOrNull() ?: 0
-                            if (name.value.isNotBlank() &&
-                                imageUrl.value.isNotBlank() &&
-                                priceInt > 0
-                            ) {
-                                ProductsStore.products.add(
-                                    Product(
-                                        id = (ProductsStore.products.size + 1).toString(),
-                                        name = name.value,
-                                        categoryId = categoryId.value,
-                                        price = priceInt,
-                                        imageUrl = imageUrl.value
-                                    )
-                                )
-                                name.value = ""
-                                price.value = ""
-                                imageUrl.value = ""
-                                categoryId.value = ProductsStore.categories.first().id
+                            val nameText = name.value.trim()
+                            val priceInt = price.value.toIntOrNull()
+                            val imageText = imageUrl.value.trim()
+
+                            if (nameText.isEmpty() || priceInt == null || imageText.isEmpty()) {
+                                Toast.makeText(
+                                    context,
+                                    "Completa nombre, precio y URL",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return@Button
                             }
+
+                            ProductsStore.products.add(
+                                Product(
+                                    id = (ProductsStore.products.size + 1).toString(),
+                                    name = nameText,
+                                    categoryId = categoryId.value,
+                                    price = priceInt,
+                                    imageUrl = imageText
+                                )
+                            )
+
+                            name.value = ""
+                            price.value = ""
+                            imageUrl.value = ""
+                            categoryId.value = ProductsStore.categories.first().id
+
+                            Toast.makeText(
+                                context,
+                                "Producto guardado con éxito",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MarronBoton
@@ -182,6 +203,11 @@ fun CatalogScreen(
 
                     IconButton(onClick = {
                         ProductsStore.products.remove(product)
+                        Toast.makeText(
+                            context,
+                            "Producto eliminado",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }) {
                         Icon(
                             imageVector = Icons.Default.Delete,
