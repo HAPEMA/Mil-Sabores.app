@@ -1,5 +1,6 @@
 package cl.milsabores.app.feature.cart
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -25,6 +27,8 @@ fun CartScreen(
     onGoCart: () -> Unit,
     onGoProfile: () -> Unit
 ) {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -85,7 +89,15 @@ fun CartScreen(
                     Spacer(Modifier.height(8.dp))
 
                     Button(
-                        onClick = { /* TODO: Pago */ },
+                        onClick = {
+                            Toast.makeText(
+                                context,
+                                "Compra realizada con éxito",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            CartStore.clear()
+                        },
                         colors = ButtonDefaults.buttonColors(MarronBoton),
                         modifier = Modifier.fillMaxWidth()
                     ) {

@@ -13,6 +13,7 @@ import cl.milsabores.app.feature.catalog.CatalogScreen
 import cl.milsabores.app.feature.category.CategoryScreen
 import cl.milsabores.app.feature.home.HomeScreen
 import cl.milsabores.app.feature.profile.ProfileScreen
+import cl.milsabores.app.feature.contact.ContactScreen
 
 @Composable
 fun MilSaboresNavHost(
@@ -36,7 +37,7 @@ fun MilSaboresNavHost(
                 onGoManage = { navController.navigate(Screen.Manage.route) },
                 onGoCart = { navController.navigate(Screen.Cart.route) },
                 onGoProfile = { navController.navigate(Screen.Profile.route) },
-                onGoToContact = { /* TODO: pantalla contacto */ }
+                onGoToContact = { navController.navigate(Screen.Contact.route) }
             )
         }
 
@@ -105,6 +106,19 @@ fun MilSaboresNavHost(
 // PERFIL
         composable(Screen.Profile.route) {
             ProfileScreen(
+                onGoHome = {
+                    navController.navigate(Screen.Home.route) {
+                        launchSingleTop = true
+                    }
+                },
+                onGoManage = { navController.navigate(Screen.Manage.route) },
+                onGoCart = { navController.navigate(Screen.Cart.route) },
+                onGoProfile = { navController.navigate(Screen.Profile.route) }
+            )
+        }
+
+        composable(Screen.Contact.route) {
+            ContactScreen(
                 onGoHome = {
                     navController.navigate(Screen.Home.route) {
                         launchSingleTop = true
