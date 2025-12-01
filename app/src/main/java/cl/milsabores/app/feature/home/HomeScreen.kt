@@ -1,0 +1,212 @@
+package cl.milsabores.app.feature.home
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import cl.milsabores.app.R
+import cl.milsabores.app.core.domain.model.ProductsStore
+import cl.milsabores.app.core.ui.components.MilSaboresTopBar
+import cl.milsabores.app.core.ui.theme.CremaFondo
+import cl.milsabores.app.core.ui.theme.MarronBoton
+import cl.milsabores.app.core.domain.model.CartStore
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+
+@Composable
+fun HomeScreen(
+    onGoHome: () -> Unit,
+    onGoManage: () -> Unit,
+    onGoCart: () -> Unit,
+    onGoProfile: () -> Unit,
+    onGoToContact: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(CremaFondo)
+            .verticalScroll(rememberScrollState())
+    ) {
+        // HEADER GLOBAL
+        MilSaboresTopBar(
+            onGoHome = onGoHome,
+            onGoManage = onGoManage,
+            onGoCart = onGoCart,
+            onGoProfile = onGoProfile
+        )
+
+        HeroBanner(onContactClick = onGoToContact)
+
+        Spacer(Modifier.height(24.dp))
+
+        ProductsSection()
+
+        Spacer(Modifier.height(32.dp))
+    }
+}
+
+@Composable
+private fun HeroBanner(onContactClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(260.dp)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.bg_header),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.matchParentSize()
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp)
+                .padding(top = 32.dp, bottom = 24.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column {
+                Text(
+                    text = "Buscamos ofrecer una\nexperiencia de compra moderna.",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = "Te ofrecemos una experiencia dulce y memorable, " +
+                            "proporcionando tortas y productos de repostería de alta calidad " +
+                            "para todas las ocasiones.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                )
+            }
+
+            Button(
+                onClick = onContactClick,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MarronBoton
+                )
+            ) {
+                Text("Contáctanos")
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProductsSection() {
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
+        Text(
+            text = "Nuestros Productos",
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(Modifier.height(4.dp))
+
+        Text(
+            text = "Explora nuestra selección de productos más destacados, cuidadosamente elegidos para ti.",
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        Spacer(Modifier.height(16.dp))
+
+        if (ProductsStore.products.isEmpty()) {
+            Text("Aún no hay productos.", style = MaterialTheme.typography.bodyMedium)
+        } else {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                ProductsStore.products.forEach { product ->
+                    val categoryName =
+                        ProductsStore.categories.firstOrNull { it.id == product.categoryId }?.name
+                            ?: "Sin categoría"
+
+                    Card(
+                        shape = RoundedCornerShape(20.dp),
+                        elevation = CardDefaults.cardElevation(4.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp)
+                        ) {
+                            AsyncImage(
+                                model = product.imageUrl,
+                                contentDescription = product.name,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(160.dp),
+                                contentScale = ContentScale.Crop
+                            )
+
+                            Spacer(Modifier.height(8.dp))
+
+                            Text(
+                                text = categoryName,
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MarronBoton
+                            )
+
+                            Text(
+                                text = product.name,
+                                style = MaterialTheme.typography.titleMedium,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+
+                            Spacer(Modifier.height(4.dp))
+
+                            Text(
+                                text = "Precio: $${product.price}",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold
+                            )
+
+                            Spacer(Modifier.height(8.dp))
+
+                            Button(
+                                onClick = {
+                                    CartStore.addToCart(product)
+                                    Toast.makeText(
+                                        context,
+                                        "Producto agregado al carrito",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = MarronBoton),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(text = "Agregar al carrito")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
