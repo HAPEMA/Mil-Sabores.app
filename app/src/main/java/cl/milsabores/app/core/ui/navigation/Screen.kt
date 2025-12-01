@@ -6,4 +6,8 @@ sealed class Screen(val route: String, val label: String) {
 
     data object Catalog : Screen("catalog", "AgregarProducto")
     data object CategoryManage : Screen("categories", "Categorías")
+
+    data object EditProfile : Screen("editProfile", "Editar Perfil")
+
+
 }
