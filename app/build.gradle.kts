@@ -42,6 +42,14 @@ android {
 }
 
 dependencies {
+    // Material 3 (para las animaciones y componentes)
+    implementation("androidx.compose.material3:material3:1.2.0")
+
+    // Compose Animation (probablemente ya lo tienes)
+    implementation("androidx.compose.animation:animation:1.6.0")
+
+    // Coil para imágenes (ya lo tienes porque usas AsyncImage)
+    implementation("io.coil-kt:coil-compose:2.5.0")
     implementation("androidx.compose.ui:ui-unit")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
