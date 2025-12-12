@@ -1,6 +1,8 @@
 package cl.milsabores.app.core.ui.navigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
@@ -22,7 +24,9 @@ fun MilSaboresBottomBar(navController: NavHostController) {
         Screen.Home to Icons.Filled.Home,
         Screen.Manage to Icons.Filled.List,
         Screen.Cart to Icons.Filled.ShoppingCart,
-        Screen.Profile to Icons.Filled.Person
+        Screen.Profile to Icons.Filled.Person,
+        Screen.Login to Icons.Filled.AccountCircle,
+        Screen.Register to Icons.Filled.Add
     )
 
     val navBackStackEntry = navController.currentBackStackEntryAsState().value

@@ -1,0 +1,82 @@
+[
+    {
+        "merged": "cl.milsabores.app-release-50:/drawable_logo_nombre.png.flat",
+        "source": "cl.milsabores.app-main-51:/drawable/logo_nombre.png"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "cl.milsabores.app-main-51:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "cl.milsabores.app-main-51:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "cl.milsabores.app-main-51:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "cl.milsabores.app-main-51:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/drawable_ic_launcher_background.xml.flat",
+        "source": "cl.milsabores.app-main-51:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "cl.milsabores.app-main-51:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "cl.milsabores.app-main-51:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "cl.milsabores.app-main-51:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "cl.milsabores.app-main-51:/mipmap-hdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "cl.milsabores.app-main-51:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/drawable_logo_cupcake.png.flat",
+        "source": "cl.milsabores.app-main-51:/drawable/logo_cupcake.png"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "cl.milsabores.app-main-51:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/xml_backup_rules.xml.flat",
+        "source": "cl.milsabores.app-main-51:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/drawable_metodos_pago.webp.flat",
+        "source": "cl.milsabores.app-main-51:/drawable/metodos_pago.webp"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "cl.milsabores.app-main-51:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/drawable_bg_header.jpg.flat",
+        "source": "cl.milsabores.app-main-51:/drawable/bg_header.jpg"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "cl.milsabores.app-main-51:/mipmap-mdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "cl.milsabores.app-main-51:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "cl.milsabores.app-release-50:/xml_data_extraction_rules.xml.flat",
+        "source": "cl.milsabores.app-main-51:/xml/data_extraction_rules.xml"
+    }
+]

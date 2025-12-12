@@ -14,6 +14,8 @@ import cl.milsabores.app.feature.category.CategoryScreen
 import cl.milsabores.app.feature.home.HomeScreen
 import cl.milsabores.app.feature.profile.ProfileScreen
 import cl.milsabores.app.feature.contact.ContactScreen
+import cl.milsabores.app.feature.auth.login.LoginScreen
+import cl.milsabores.app.feature.auth.register.RegisterScreen
 
 @Composable
 fun MilSaboresNavHost(
@@ -129,5 +131,22 @@ fun MilSaboresNavHost(
                 onGoProfile = { navController.navigate(Screen.Profile.route) }
             )
         }
+
+        composable(Screen.Login.route) {
+            LoginScreen(
+                onLogin = { /* luego Supabase */ },
+                onGoRegister = { navController.navigate(Screen.Register.route) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.Register.route) {
+            RegisterScreen(
+                onRegister = { /* luego Supabase */ },
+                onGoLogin = { navController.popBackStack() }
+            )
+        }
+
+
     }
 }

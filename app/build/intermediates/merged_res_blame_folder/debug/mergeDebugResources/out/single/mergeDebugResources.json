@@ -64,6 +64,10 @@
         "source": "cl.milsabores.app-main-56:/mipmap-xxhdpi/ic_launcher_round.webp"
     },
     {
+        "merged": "cl.milsabores.app-debug-54:/drawable_pastele_comiendo.jpg.flat",
+        "source": "cl.milsabores.app-main-56:/drawable/pastele_comiendo.jpg"
+    },
+    {
         "merged": "cl.milsabores.app-debug-54:/drawable_bg_header.jpg.flat",
         "source": "cl.milsabores.app-main-56:/drawable/bg_header.jpg"
     },
