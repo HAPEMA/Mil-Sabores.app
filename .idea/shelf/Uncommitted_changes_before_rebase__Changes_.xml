@@ -1,0 +1,168 @@
+<changelist name="Uncommitted_changes_before_rebase_[Changes]" date="1765547193462" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before rebase [Changes]" />
+  <binary>
+    <option name="AFTER_PATH" value="app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.values.s" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/internal-name-to-source.tab.values.s" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.values.s" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/source-to-classes.tab.values.s" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/ComposableSingletons$CartScreenKt$lambda-3$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/ComposableSingletons$CartScreenKt$lambda-3$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/ComposableSingletons$CartScreenKt$lambda-4$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/ComposableSingletons$CartScreenKt$lambda-4$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/ComposableSingletons$CartScreenKt$lambda-5$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/ComposableSingletons$CartScreenKt$lambda-5$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/ComposableSingletons$CartScreenKt$lambda-6$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/ComposableSingletons$CartScreenKt$lambda-6$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$QuantitySelector$1$3.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$QuantitySelector$1$3.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/ComposableSingletons$CartScreenKt$lambda-8$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/ComposableSingletons$CartScreenKt$lambda-8$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$AnimatedSummaryCard$1$1$3$1$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$AnimatedSummaryCard$1$1$3$1$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$AnimatedSummaryCard$1$1$3$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$AnimatedSummaryCard$1$1$3$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$QuantitySelector$1$1$1$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$QuantitySelector$1$1$1$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$QuantitySelector$1$4$1$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$QuantitySelector$1$4$1$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/ComposableSingletons$CartScreenKt$lambda-9$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/ComposableSingletons$CartScreenKt$lambda-9$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$CartScreen$lambda$18$lambda$17$lambda$14$lambda$13$$inlined$itemsIndexed$default$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$CartScreen$lambda$18$lambda$17$lambda$14$lambda$13$$inlined$itemsIndexed$default$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/desugar_graph/debug/dexBuilderDebug/out/currentProject/jar_69f7074abe42135e7d4833274d18a04f556c13f7be30588ee3fbc56fe839becd_bucket_0/graph.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/graph.bin" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$CartScreen$4.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$CartScreen$4.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/ComposableSingletons$CartScreenKt$lambda-15$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/ComposableSingletons$CartScreenKt$lambda-15$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/ComposableSingletons$CartScreenKt$lambda-10$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/ComposableSingletons$CartScreenKt$lambda-10$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/desugar_graph/debug/dexBuilderDebug/out/currentProject/jar_69f7074abe42135e7d4833274d18a04f556c13f7be30588ee3fbc56fe839becd_bucket_3/graph.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/graph1.bin" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/ComposableSingletons$CartScreenKt$lambda-12$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/ComposableSingletons$CartScreenKt$lambda-12$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/internal-name-to-source.tab.values" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/internal-name-to-source.tab.values" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/ComposableSingletons$CartScreenKt$lambda-11$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/ComposableSingletons$CartScreenKt$lambda-11$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/ComposableSingletons$CartScreenKt$lambda-13$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/ComposableSingletons$CartScreenKt$lambda-13$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/ComposableSingletons$CartScreenKt$lambda-14$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/ComposableSingletons$CartScreenKt$lambda-14$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab.values" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/lookups.tab.values" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$CartScreen$1$1$2$1$2$1$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$CartScreen$1$1$2$1$2$1$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$CartScreen$lambda$18$lambda$17$lambda$14$lambda$13$$inlined$itemsIndexed$default$2.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$CartScreen$lambda$18$lambda$17$lambda$14$lambda$13$$inlined$itemsIndexed$default$2.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$AnimatedSummaryCard$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$AnimatedSummaryCard$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/lookups/lookups.tab.values.s" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/lookups.tab.values.s" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/kotlin/compileDebugKotlin/cacheable/caches-jvm/jvm/kotlin/source-to-classes.tab.values" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/source-to-classes.tab.values" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$CartScreen$3.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$CartScreen$3.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$AnimatedCartItemCard$4$1$1$1$1$4$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$AnimatedCartItemCard$4$1$1$1$1$4$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$AnimatedCartItemCard$1$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$AnimatedCartItemCard$1$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$AnimatedCartItemCard$4$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$AnimatedCartItemCard$4$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$AnimatedCartItemCard$4.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$AnimatedCartItemCard$4.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$AnimatedCartItemCard$4$1$1$1$1$4$1$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$AnimatedCartItemCard$4$1$1$1$1$4$1$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$EmptyCartView$1$1$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$EmptyCartView$1$1$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/ComposableSingletons$CartScreenKt$lambda-7$1.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/ComposableSingletons$CartScreenKt$lambda-7$1.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/desugar_graph/debug/dexBuilderDebug/out/currentProject/jar_69f7074abe42135e7d4833274d18a04f556c13f7be30588ee3fbc56fe839becd_bucket_2/graph.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/graph2.bin" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/project_dex_archive/debug/dexBuilderDebug/out/cl/milsabores/app/feature/cart/CartScreenKt$CartScreen$lambda$18$lambda$17$lambda$14$lambda$13$$inlined$itemsIndexed$default$3.dex" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/CartScreenKt$CartScreen$lambda$18$lambda$17$lambda$14$lambda$13$$inlined$itemsIndexed$default$3.dex" />
+  </binary>
+  <binary>
+    <option name="AFTER_PATH" value="app/build/intermediates/desugar_graph/debug/dexBuilderDebug/out/currentProject/jar_69f7074abe42135e7d4833274d18a04f556c13f7be30588ee3fbc56fe839becd_bucket_1/graph.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/graph3.bin" />
+  </binary>
+</changelist>
