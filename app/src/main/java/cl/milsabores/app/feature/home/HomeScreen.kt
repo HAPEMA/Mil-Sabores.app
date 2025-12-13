@@ -1,10 +1,10 @@
 package cl.milsabores.app.feature.home
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -12,20 +12,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import cl.milsabores.app.R
+import cl.milsabores.app.core.domain.model.CartStore
 import cl.milsabores.app.core.domain.model.ProductsStore
 import cl.milsabores.app.core.ui.components.MilSaboresTopBar
 import cl.milsabores.app.core.ui.theme.CremaFondo
 import cl.milsabores.app.core.ui.theme.MarronBoton
-import cl.milsabores.app.core.domain.model.CartStore
-import android.widget.Toast
-import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun HomeScreen(
@@ -72,6 +72,12 @@ private fun HeroBanner(onContactClick: () -> Unit) {
             contentScale = ContentScale.Crop,
             modifier = Modifier.matchParentSize()
         )
+        // Overlay semitransparente para mejorar legibilidad
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(Color.Black.copy(alpha = 0.35f))
+        )
 
         Column(
             modifier = Modifier
@@ -84,7 +90,7 @@ private fun HeroBanner(onContactClick: () -> Unit) {
                 Text(
                     text = "Buscamos ofrecer una\nexperiencia de compra moderna.",
                     style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = Color.White,
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.height(8.dp))
@@ -93,15 +99,13 @@ private fun HeroBanner(onContactClick: () -> Unit) {
                             "proporcionando tortas y productos de repostería de alta calidad " +
                             "para todas las ocasiones.",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onPrimary,
+                    color = Color.White,
                 )
             }
 
             Button(
                 onClick = onContactClick,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MarronBoton
-                )
+                colors = ButtonDefaults.buttonColors(containerColor = MarronBoton)
             ) {
                 Text("Contáctanos")
             }
@@ -137,7 +141,7 @@ private fun ProductsSection() {
             Text("Aún no hay productos.", style = MaterialTheme.typography.bodyMedium)
         } else {
             Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 ProductsStore.products.forEach { product ->
@@ -146,22 +150,41 @@ private fun ProductsSection() {
                             ?: "Sin categoría"
 
                     Card(
-                        shape = RoundedCornerShape(20.dp),
-                        elevation = CardDefaults.cardElevation(4.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = CardDefaults.cardElevation(6.dp),
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
                         Column(
                             modifier = Modifier.padding(12.dp)
                         ) {
-                            AsyncImage(
-                                model = product.imageUrl,
-                                contentDescription = product.name,
+                            Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(160.dp),
-                                contentScale = ContentScale.Crop
-                            )
+                                    .height(160.dp)
+                            ) {
+                                AsyncImage(
+                                    model = product.imageUrl,
+                                    contentDescription = product.name,
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop
+                                )
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(Color.Black.copy(alpha = 0.25f))
+                                        .align(Alignment.BottomStart)
+                                        .padding(6.dp)
+                                ) {
+                                    Text(
+                                        text = product.name,
+                                        color = Color.White,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                            }
 
                             Spacer(Modifier.height(8.dp))
 
@@ -169,13 +192,6 @@ private fun ProductsSection() {
                                 text = categoryName,
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MarronBoton
-                            )
-
-                            Text(
-                                text = product.name,
-                                style = MaterialTheme.typography.titleMedium,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis
                             )
 
                             Spacer(Modifier.height(4.dp))
@@ -209,4 +225,3 @@ private fun ProductsSection() {
         }
     }
 }
-
