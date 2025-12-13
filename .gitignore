@@ -1,36 +1,44 @@
-# =========================
+# ==================================================
 # ANDROID / ANDROID STUDIO
-# =========================
+# ==================================================
 
-# Gradle (caches y outputs)
+# Gradle caches & build outputs
 .gradle/
+build/
 **/build/
 
-# Local configuration (SDK/NDK paths, machine-specific)
+# Local configuration (SDK / NDK paths)
 local.properties
 
 # Logs
 *.log
 
-# Android Studio / IntelliJ (IDE config)
+# ==================================================
+# ANDROID STUDIO / INTELLIJ IDEA
+# ==================================================
+
 .idea/
 *.iml
 *.iws
 *.ipr
 
-# Native / CMake builds
+# Android Studio caches & native builds
 .cxx/
 .externalNativeBuild/
 
-# Android generated outputs
+# ==================================================
+# ANDROID GENERATED FILES
+# ==================================================
+
 captures/
 *.apk
 *.aab
 *.dex
+*.flat
 
-# =========================
+# ==================================================
 # KOTLIN / JVM
-# =========================
+# ==================================================
 
 *.class
 
@@ -38,14 +46,15 @@ captures/
 hs_err_pid*
 replay_pid*
 
-# =========================
-# NODE / JS (solo si usas Node)
-# =========================
+# ==================================================
+# NODE / JS (optional)
+# ==================================================
+
 node_modules/
 
-# =========================
+# ==================================================
 # OS / SYSTEM FILES
-# =========================
+# ==================================================
 
 .DS_Store
 Thumbs.db

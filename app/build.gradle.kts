@@ -7,7 +7,7 @@ plugins {
 android {
     namespace = "cl.milsabores.app"
     compileSdk {
-        version = release(36)
+        version = release(34)
     }
 
     defaultConfig {
