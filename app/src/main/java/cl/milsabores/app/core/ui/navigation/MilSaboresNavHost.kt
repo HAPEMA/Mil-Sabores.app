@@ -143,9 +143,11 @@ fun MilSaboresNavHost(
         composable(Screen.Register.route) {
             RegisterScreen(
                 onRegister = { /* luego Supabase */ },
-                onGoLogin = { navController.popBackStack() }
+                onGoLogin = { navController.popBackStack() },
+                onBack = { navController.popBackStack() }
             )
         }
+
 
 
     }
