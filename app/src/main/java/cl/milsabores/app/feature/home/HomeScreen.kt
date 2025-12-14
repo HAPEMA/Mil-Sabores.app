@@ -1,6 +1,5 @@
 package cl.milsabores.app.feature.home
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,11 +8,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -25,6 +25,7 @@ import cl.milsabores.app.core.domain.model.ProductsStore
 import cl.milsabores.app.core.ui.components.MilSaboresTopBar
 import cl.milsabores.app.core.ui.theme.CremaFondo
 import cl.milsabores.app.core.ui.theme.MarronBoton
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -35,29 +36,48 @@ fun HomeScreen(
     onGoToContact: () -> Unit,
     onGoProduct: (String) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(CremaFondo)
-            .verticalScroll(rememberScrollState())
-    ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
-        MilSaboresTopBar(
-            onGoHome = onGoHome,
-            onGoManage = onGoManage,
-            onGoCart = onGoCart,
-            onGoProfile = onGoProfile
-        )
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { padding ->
 
-        HeroBanner(onContactClick = onGoToContact)
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .background(CremaFondo)
+                .verticalScroll(rememberScrollState())
+        ) {
 
-        Spacer(Modifier.height(24.dp))
+            MilSaboresTopBar(
+                onGoHome = onGoHome,
+                onGoManage = onGoManage,
+                onGoCart = onGoCart,
+                onGoProfile = onGoProfile
+            )
 
-        ProductsSection(
-            onGoProduct = onGoProduct
-        )
+            HeroBanner(onContactClick = onGoToContact)
 
-        Spacer(Modifier.height(32.dp))
+            Spacer(Modifier.height(24.dp))
+
+            ProductsSection(
+                onGoProduct = onGoProduct,
+                onAddToCart = { product ->
+                    CartStore.addToCart(product)
+
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = "Producto agregado al carrito 🛒",
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                }
+            )
+
+            Spacer(Modifier.height(32.dp))
+        }
     }
 }
 
@@ -120,10 +140,9 @@ private fun HeroBanner(
 
 @Composable
 private fun ProductsSection(
-    onGoProduct: (String) -> Unit
+    onGoProduct: (String) -> Unit,
+    onAddToCart: (product: cl.milsabores.app.core.domain.model.Product) -> Unit
 ) {
-    val context = LocalContext.current
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -150,9 +169,7 @@ private fun ProductsSection(
             return
         }
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             ProductsStore.products.forEach { product ->
 
                 val categoryName =
@@ -213,14 +230,7 @@ private fun ProductsSection(
                         Spacer(Modifier.height(8.dp))
 
                         Button(
-                            onClick = {
-                                CartStore.addToCart(product)
-                                Toast.makeText(
-                                    context,
-                                    "Producto agregado al carrito",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            },
+                            onClick = { onAddToCart(product) },
                             colors = ButtonDefaults.buttonColors(containerColor = MarronBoton),
                             modifier = Modifier.fillMaxWidth()
                         ) {
