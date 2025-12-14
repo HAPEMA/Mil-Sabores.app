@@ -43,6 +43,7 @@ android {
 
 dependencies {
     implementation("androidx.compose.ui:ui-unit")
+    implementation(platform("androidx.compose:compose-bom:2024.02.00"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
