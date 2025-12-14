@@ -1,22 +1,25 @@
 package cl.milsabores.app.feature.product
 
+import androidx.compose.animation.*
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import cl.milsabores.app.core.domain.model.CartStore
 import cl.milsabores.app.core.domain.model.ProductsStore
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ProductDetailScreen(
     productId: String,
@@ -37,9 +40,12 @@ fun ProductDetailScreen(
         return
     }
 
-    // 🔔 Snackbar
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
+    // 🔹 Control de animación de entrada
+    var visible by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { visible = true }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -48,10 +54,9 @@ fun ProductDetailScreen(
                 price = product.price,
                 onAddToCart = {
                     CartStore.addToCart(product)
-
                     scope.launch {
                         snackbarHostState.showSnackbar(
-                            message = "Producto agregado al carrito 🛒",
+                            "Producto agregado al carrito 🛒",
                             duration = SnackbarDuration.Short
                         )
                     }
@@ -60,81 +65,99 @@ fun ProductDetailScreen(
         }
     ) { padding ->
 
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .verticalScroll(rememberScrollState())
+        AnimatedVisibility(
+            visible = visible,
+            enter = fadeIn() + slideInVertically(initialOffsetY = { it / 2 })
         ) {
-
-            Box {
-                AsyncImage(
-                    model = product.imageUrl,
-                    contentDescription = product.name,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp)
-                )
-
-                IconButton(
-                    onClick = onBack,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .align(Alignment.TopStart)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Volver"
-                    )
-                }
-            }
-
-            Spacer(Modifier.height(16.dp))
-
             Column(
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier
+                    .padding(padding)
+                    .verticalScroll(rememberScrollState())
             ) {
 
-                Text(
-                    text = product.name,
-                    style = MaterialTheme.typography.headlineSmall
-                )
+                Box {
+                    Crossfade(targetState = product.imageUrl) { image ->
+                        AsyncImage(
+                            model = image,
+                            contentDescription = product.name,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp)
+                        )
+                    }
 
-                Spacer(Modifier.height(8.dp))
-
-                Text(
-                    text = categoryName.uppercase(),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
-
-                Spacer(Modifier.height(12.dp))
-
-                Text(
-                    text = "$${product.price}",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.secondary
-                )
+                    IconButton(
+                        onClick = onBack,
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .align(Alignment.TopStart)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Volver"
+                        )
+                    }
+                }
 
                 Spacer(Modifier.height(16.dp))
 
-                Text(
-                    text = "Producto artesanal preparado con ingredientes de alta calidad. Ideal para celebraciones o para darte un gusto.",
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                ) {
 
-                Spacer(Modifier.height(80.dp)) // espacio para el bottom bar
+                    Text(
+                        text = product.name,
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+
+                    Spacer(Modifier.height(8.dp))
+
+                    Text(
+                        text = categoryName.uppercase(),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    Spacer(Modifier.height(12.dp))
+
+                    Text(
+                        text = "$${product.price}",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = MaterialTheme.colorScheme.secondary
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    Text(
+                        text = "Producto artesanal preparado con ingredientes de alta calidad. Ideal para celebraciones o para darte un gusto.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+
+                    Spacer(Modifier.height(80.dp))
+                }
             }
         }
     }
 }
-
 @Composable
 fun AddToCartBar(
     price: Int,
     onAddToCart: () -> Unit
 ) {
+    var pressed by remember { mutableStateOf(false) }
+
+    val scale by animateFloatAsState(
+        targetValue = if (pressed) 0.95f else 1f,
+        label = "button-scale"
+    )
+
+    val elevation by animateDpAsState(
+        targetValue = if (pressed) 2.dp else 8.dp,
+        label = "bar-elevation"
+    )
+
     Surface(
-        tonalElevation = 8.dp
+        tonalElevation = elevation
     ) {
         Row(
             modifier = Modifier
@@ -150,8 +173,14 @@ fun AddToCartBar(
             )
 
             Button(
-                onClick = onAddToCart,
-                modifier = Modifier.height(48.dp)
+                onClick = {
+                    pressed = true
+                    onAddToCart()
+                    pressed = false
+                },
+                modifier = Modifier
+                    .height(48.dp)
+                    .scale(scale)
             ) {
                 Text("Agregar al carrito")
             }

@@ -1,4 +1,5 @@
 package cl.milsabores.app.feature.home
+import androidx.compose.ui.graphics.Brush
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -80,7 +81,6 @@ fun HomeScreen(
         }
     }
 }
-
 @Composable
 private fun HeroBanner(
     onContactClick: () -> Unit
@@ -88,7 +88,7 @@ private fun HeroBanner(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(260.dp)
+            .height(280.dp)
     ) {
         Image(
             painter = painterResource(id = R.drawable.bg_header),
@@ -97,42 +97,70 @@ private fun HeroBanner(
             modifier = Modifier.matchParentSize()
         )
 
+        // Overlay con gradiente (MUCHO mejor que color plano)
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .background(Color.Black.copy(alpha = 0.35f))
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color.Black.copy(alpha = 0.65f),
+                            Color.Black.copy(alpha = 0.25f),
+                            Color.Transparent
+                        )
+                    )
+                )
         )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp)
-                .padding(top = 32.dp, bottom = 24.dp),
+                .padding(horizontal = 20.dp, vertical = 28.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
+
+            // TEXTO
             Column {
                 Text(
-                    text = "Buscamos ofrecer una\nexperiencia de compra moderna.",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = Color.White,
+                    text = "Mil Sabores",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
+                )
+
+                Spacer(Modifier.height(6.dp))
+
+                Text(
+                    text = "Repostería artesanal\npara momentos especiales",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    lineHeight = MaterialTheme.typography.headlineMedium.lineHeight
                 )
 
                 Spacer(Modifier.height(8.dp))
 
                 Text(
-                    text = "Te ofrecemos una experiencia dulce y memorable, " +
-                            "proporcionando tortas y productos de repostería de alta calidad.",
+                    text = "Tortas, pasteles y dulces elaborados con ingredientes de calidad y dedicación.",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White
+                    color = Color.White.copy(alpha = 0.85f)
                 )
             }
 
+            // CTA
             Button(
                 onClick = onContactClick,
-                colors = ButtonDefaults.buttonColors(containerColor = MarronBoton)
+                shape = RoundedCornerShape(14.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                ),
+                modifier = Modifier
+                    .height(48.dp)
             ) {
-                Text("Contáctanos")
+                Text(
+                    text = "Contáctanos",
+                    style = MaterialTheme.typography.labelLarge
+                )
             }
         }
     }
@@ -155,21 +183,23 @@ private fun ProductsSection(
             fontWeight = FontWeight.Bold
         )
 
-        Spacer(Modifier.height(4.dp))
-
         Text(
             text = "Explora nuestra selección de productos destacados.",
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
         )
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(20.dp))
 
         if (ProductsStore.products.isEmpty()) {
-            Text("Aún no hay productos.")
+            Text(
+                text = "Aún no hay productos disponibles.",
+                style = MaterialTheme.typography.bodyMedium
+            )
             return
         }
 
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
             ProductsStore.products.forEach { product ->
 
                 val categoryName =
@@ -178,15 +208,17 @@ private fun ProductsSection(
                         ?.name ?: "Sin categoría"
 
                 Card(
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(6.dp)
+                    shape = RoundedCornerShape(20.dp),
+                    elevation = CardDefaults.cardElevation(4.dp),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
+                    Column {
 
+                        // IMAGEN
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(160.dp)
+                                .height(180.dp)
                         ) {
                             AsyncImage(
                                 model = product.imageUrl,
@@ -194,57 +226,47 @@ private fun ProductsSection(
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Crop
                             )
+                        }
 
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(Color.Black.copy(alpha = 0.25f))
-                                    .align(Alignment.BottomStart)
-                                    .padding(6.dp)
+                        Column(modifier = Modifier.padding(16.dp)) {
+
+                            Text(
+                                text = categoryName.uppercase(),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+
+                            Spacer(Modifier.height(4.dp))
+
+                            Text(
+                                text = product.name,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+
+                            Spacer(Modifier.height(6.dp))
+
+                            Text(
+                                text = "$${product.price}",
+                                style = MaterialTheme.typography.titleLarge,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+
+                            Spacer(Modifier.height(16.dp))
+
+                            Button(
+                                onClick = { onAddToCart(product) },
+                                modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text(
-                                    text = product.name,
-                                    color = Color.White,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    style = MaterialTheme.typography.titleMedium
-                                )
+                                Text("Agregar al carrito")
                             }
-                        }
 
-                        Spacer(Modifier.height(8.dp))
-
-                        Text(
-                            text = categoryName,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MarronBoton
-                        )
-
-                        Spacer(Modifier.height(4.dp))
-
-                        Text(
-                            text = "Precio: $${product.price}",
-                            fontWeight = FontWeight.SemiBold
-                        )
-
-                        Spacer(Modifier.height(8.dp))
-
-                        Button(
-                            onClick = { onAddToCart(product) },
-                            colors = ButtonDefaults.buttonColors(containerColor = MarronBoton),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("Agregar al carrito")
-                        }
-
-                        Spacer(Modifier.height(6.dp))
-
-                        Button(
-                            onClick = { onGoProduct(product.id) },
-                            colors = ButtonDefaults.buttonColors(containerColor = MarronBoton),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("Ver producto")
+                            TextButton(
+                                onClick = { onGoProduct(product.id) },
+                                modifier = Modifier.align(Alignment.End)
+                            ) {
+                                Text("Ver detalle")
+                            }
                         }
                     }
                 }
@@ -252,3 +274,4 @@ private fun ProductsSection(
         }
     }
 }
+
