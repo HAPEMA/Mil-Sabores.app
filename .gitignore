@@ -58,3 +58,25 @@ node_modules/
 
 .DS_Store
 Thumbs.db
+
+
+
+
+
+## ==================== spor si acaso
+
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+
+# Local config
+local.properties
+
+# APK / Dex
+*.apk
+*.dex
