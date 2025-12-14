@@ -1,6 +1,10 @@
 package cl.milsabores.app.core.ui.navigation
 
 sealed class Screen(val route: String, val label: String) {
+    data object Login : Screen("login", "Login")
+    data object Register : Screen("register", "Register")
+
+
     data object Home : Screen("home", "Inicio")
     data object Manage : Screen("manage", "Gestionar")
     data object Cart : Screen("cart", "Carrito")
@@ -8,7 +12,4 @@ sealed class Screen(val route: String, val label: String) {
     data object Contact : Screen("contact", "Contacto")
     data object Catalog : Screen("catalog", "AgregarProducto")
     data object CategoryManage : Screen("categories", "Categorías")
-    data object Login : Screen("login", "Login")
-    data object Register : Screen("register", "Register")
-    data object ProductDetail : Screen("product/{productId}", "Detalle Producto")
 }
