@@ -16,13 +16,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cl.milsabores.app.core.data.remote.SupabaseClientProvider
+import cl.milsabores.app.core.domain.model.AuthFakeStore
 import cl.milsabores.app.core.ui.theme.Blanco
 import cl.milsabores.app.core.ui.theme.CremaFondo
 import cl.milsabores.app.core.ui.theme.MarronBoton
 import cl.milsabores.app.core.ui.theme.TextoPrincipal
-import io.github.jan.supabase.auth.auth
-import io.github.jan.supabase.auth.providers.builtin.Email
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,7 +37,7 @@ fun LoginScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = CremaFondo
     ) { innerPadding ->
 
@@ -52,7 +50,6 @@ fun LoginScreen(
                 ),
             contentAlignment = Alignment.Center
         ) {
-
             Card(
                 modifier = Modifier
                     .fillMaxWidth(0.88f)
@@ -116,25 +113,16 @@ fun LoginScreen(
 
                     Button(
                         onClick = {
-                            val em = email.trim()
-                            val pw = password
-
-                            if (em.isBlank() || pw.isBlank()) {
-                                scope.launch { snackbarHostState.showSnackbar("Completa correo y contraseña.") }
-                                return@Button
-                            }
-
                             scope.launch {
                                 loading = true
                                 try {
-                                    SupabaseClientProvider.client.auth.signInWith(Email) {
-                                        this.email = em
-                                        this.password = pw
+                                    val ok = AuthFakeStore.login(email, password)
+                                    if (ok) {
+                                        snackbarHostState.showSnackbar("Login exitoso ✅")
+                                        onLoginSuccess()
+                                    } else {
+                                        snackbarHostState.showSnackbar("Credenciales inválidas ❌")
                                     }
-                                    snackbarHostState.showSnackbar("Login exitoso ✅")
-                                    onLoginSuccess()
-                                } catch (e: Exception) {
-                                    snackbarHostState.showSnackbar("Error al iniciar sesión: ${e.message}")
                                 } finally {
                                     loading = false
                                 }
@@ -143,20 +131,11 @@ fun LoginScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(52.dp),
+                        shape = MaterialTheme.shapes.large,
                         colors = ButtonDefaults.buttonColors(containerColor = MarronBoton),
                         enabled = !loading
                     ) {
-                        if (loading) {
-                            CircularProgressIndicator(
-                                strokeWidth = 2.dp,
-                                modifier = Modifier.size(20.dp),
-                                color = Blanco
-                            )
-                            Spacer(Modifier.width(10.dp))
-                            Text("Ingresando...", color = Blanco, fontWeight = FontWeight.Bold)
-                        } else {
-                            Text("Iniciar Sesión", color = Blanco, fontWeight = FontWeight.Bold)
-                        }
+                        Text("Iniciar Sesión", color = Blanco, fontWeight = FontWeight.Bold)
                     }
 
                     Spacer(Modifier.height(14.dp))

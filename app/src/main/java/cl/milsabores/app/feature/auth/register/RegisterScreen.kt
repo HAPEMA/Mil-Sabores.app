@@ -18,18 +18,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cl.milsabores.app.core.data.remote.SupabaseClientProvider
+import cl.milsabores.app.core.domain.model.AuthFakeStore
 import cl.milsabores.app.core.ui.theme.Blanco
 import cl.milsabores.app.core.ui.theme.CremaFondo
 import cl.milsabores.app.core.ui.theme.MarronBoton
 import cl.milsabores.app.core.ui.theme.TextoPrincipal
-import io.github.jan.supabase.auth.auth
-import io.github.jan.supabase.auth.providers.builtin.Email
 import kotlinx.coroutines.launch
 
 @Composable
 fun RegisterScreen(
-    onRegisterSuccess: () -> Unit,  // <- si quieres, puedes redirigir a Home. Si no, manda a Login.
+    onRegisterSuccess: () -> Unit, // puedes mandarlo a Home o a Login
     onGoLogin: () -> Unit,
     onBack: () -> Unit
 ) {
@@ -41,7 +39,6 @@ fun RegisterScreen(
     var birthDate by remember { mutableStateOf("") }
 
     var loading by remember { mutableStateOf(false) }
-
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -49,19 +46,13 @@ fun RegisterScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = CremaFondo
     ) { innerPadding ->
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(
-                    Brush.verticalGradient(
-                        listOf(CremaFondo, CremaFondo.copy(alpha = 0.85f))
-                    )
-                ),
+                .background(Brush.verticalGradient(listOf(CremaFondo, CremaFondo.copy(alpha = 0.85f)))),
             contentAlignment = Alignment.Center
         ) {
-
             Card(
                 modifier = Modifier
                     .fillMaxWidth(0.88f)
@@ -70,181 +61,103 @@ fun RegisterScreen(
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                 colors = CardDefaults.cardColors(containerColor = Blanco)
             ) {
-
                 Column(
                     modifier = Modifier
                         .padding(32.dp)
                         .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-
-                    Text(
-                        text = "Crear Cuenta",
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = TextoPrincipal
-                    )
-
-                    Text(
-                        text = "Completa tus datos para registrarte",
-                        fontSize = 14.sp,
-                        color = TextoPrincipal.copy(alpha = 0.7f)
-                    )
+                    Text("Crear Cuenta", fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, color = TextoPrincipal)
+                    Text("Completa tus datos para registrarte", fontSize = 14.sp, color = TextoPrincipal.copy(alpha = 0.7f))
 
                     Spacer(Modifier.height(22.dp))
 
-                    OutlinedTextField(
-                        value = nombres,
-                        onValueChange = { nombres = it },
-                        label = { Text("Nombres") },
-                        modifier = Modifier.fillMaxWidth(),
-                        leadingIcon = { Icon(Icons.Default.Person, null, tint = MarronBoton) },
-                        enabled = !loading,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MarronBoton,
-                            focusedLabelColor = MarronBoton,
-                            cursorColor = MarronBoton
-                        )
+                    @Composable
+                    fun fieldColors() = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MarronBoton,
+                        focusedLabelColor = MarronBoton,
+                        cursorColor = MarronBoton
                     )
 
+                    OutlinedTextField(
+                        value = nombres, onValueChange = { nombres = it },
+                        label = { Text("Nombres") }, modifier = Modifier.fillMaxWidth(),
+                        leadingIcon = { Icon(Icons.Default.Person, null, tint = MarronBoton) },
+                        enabled = !loading, colors = fieldColors()
+                    )
                     Spacer(Modifier.height(12.dp))
 
                     OutlinedTextField(
-                        value = apellidoP,
-                        onValueChange = { apellidoP = it },
-                        label = { Text("Apellido Paterno") },
-                        modifier = Modifier.fillMaxWidth(),
+                        value = apellidoP, onValueChange = { apellidoP = it },
+                        label = { Text("Apellido Paterno") }, modifier = Modifier.fillMaxWidth(),
                         leadingIcon = { Icon(Icons.Default.Person, null, tint = MarronBoton) },
-                        enabled = !loading,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MarronBoton,
-                            focusedLabelColor = MarronBoton,
-                            cursorColor = MarronBoton
-                        )
+                        enabled = !loading, colors = fieldColors()
                     )
-
                     Spacer(Modifier.height(12.dp))
 
                     OutlinedTextField(
-                        value = apellidoM,
-                        onValueChange = { apellidoM = it },
-                        label = { Text("Apellido Materno") },
-                        modifier = Modifier.fillMaxWidth(),
+                        value = apellidoM, onValueChange = { apellidoM = it },
+                        label = { Text("Apellido Materno") }, modifier = Modifier.fillMaxWidth(),
                         leadingIcon = { Icon(Icons.Default.Person, null, tint = MarronBoton) },
-                        enabled = !loading,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MarronBoton,
-                            focusedLabelColor = MarronBoton,
-                            cursorColor = MarronBoton
-                        )
+                        enabled = !loading, colors = fieldColors()
                     )
-
                     Spacer(Modifier.height(12.dp))
 
                     OutlinedTextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        label = { Text("Correo Electrónico") },
-                        modifier = Modifier.fillMaxWidth(),
+                        value = email, onValueChange = { email = it },
+                        label = { Text("Correo Electrónico") }, modifier = Modifier.fillMaxWidth(),
                         leadingIcon = { Icon(Icons.Default.Email, null, tint = MarronBoton) },
-                        enabled = !loading,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MarronBoton,
-                            focusedLabelColor = MarronBoton,
-                            cursorColor = MarronBoton
-                        )
+                        enabled = !loading, colors = fieldColors()
                     )
-
                     Spacer(Modifier.height(12.dp))
 
                     OutlinedTextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        label = { Text("Contraseña") },
-                        modifier = Modifier.fillMaxWidth(),
+                        value = password, onValueChange = { password = it },
+                        label = { Text("Contraseña") }, modifier = Modifier.fillMaxWidth(),
                         visualTransformation = PasswordVisualTransformation(),
                         leadingIcon = { Icon(Icons.Default.Lock, null, tint = MarronBoton) },
-                        enabled = !loading,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MarronBoton,
-                            focusedLabelColor = MarronBoton,
-                            cursorColor = MarronBoton
-                        )
+                        enabled = !loading, colors = fieldColors()
                     )
-
                     Spacer(Modifier.height(12.dp))
 
                     OutlinedTextField(
-                        value = birthDate,
-                        onValueChange = { birthDate = it },
-                        label = { Text("Fecha de nacimiento") },
-                        modifier = Modifier.fillMaxWidth(),
+                        value = birthDate, onValueChange = { birthDate = it },
+                        label = { Text("Fecha de nacimiento") }, modifier = Modifier.fillMaxWidth(),
                         leadingIcon = { Icon(Icons.Default.DateRange, null, tint = MarronBoton) },
-                        enabled = !loading,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MarronBoton,
-                            focusedLabelColor = MarronBoton,
-                            cursorColor = MarronBoton
-                        )
+                        enabled = !loading, colors = fieldColors()
                     )
 
                     Spacer(Modifier.height(22.dp))
 
                     Button(
                         onClick = {
-                            val em = email.trim()
-                            val pw = password
-
-                            if (em.isBlank() || pw.isBlank()) {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Completa correo y contraseña.")
-                                }
-                                return@Button
-                            }
-
                             scope.launch {
+                                loading = true
                                 try {
-                                    // SignUp en Supabase usando el email y password
-                                    SupabaseClientProvider.client.auth.signUpWith(Email) {
-                                        this.email = email
-                                        this.password = password
+                                    val ok = AuthFakeStore.register(email, password)
+                                    if (ok) {
+                                        snackbarHostState.showSnackbar("Registro exitoso ✅")
+                                        onGoLogin()
+                                    } else {
+                                        snackbarHostState.showSnackbar("No se pudo registrar (correo ya existe o campos vacíos) ❌")
                                     }
-                                    snackbarHostState.showSnackbar("Registro exitoso ✅")
-                                    onGoLogin()  // Llamar a la acción de login después del registro
-                                } catch (e: Exception) {
-                                    snackbarHostState.showSnackbar("Error al registrar: ${e.message}")
+                                } finally {
+                                    loading = false
                                 }
                             }
                         },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(52.dp),
+                        modifier = Modifier.fillMaxWidth().height(52.dp),
                         shape = MaterialTheme.shapes.large,
                         colors = ButtonDefaults.buttonColors(containerColor = MarronBoton),
                         enabled = !loading
                     ) {
-                        if (loading) {
-                            CircularProgressIndicator(
-                                strokeWidth = 2.dp,
-                                modifier = Modifier.size(20.dp),
-                                color = Blanco
-                            )
-                            Spacer(Modifier.width(10.dp))
-                            Text("Creando cuenta...", color = Blanco, fontWeight = FontWeight.Bold)
-                        } else {
-                            Text("Registrarme", color = Blanco, fontWeight = FontWeight.Bold)
-                        }
+                        Text("Registrarme", color = Blanco, fontWeight = FontWeight.Bold)
                     }
 
                     Spacer(Modifier.height(12.dp))
 
-                    TextButton(onClick = onBack, enabled = !loading) {
-                        Text("Volver", color = MarronBoton)
-                    }
-
-                    TextButton(onClick = onGoLogin, enabled = !loading) {
-                        Text("¿Ya tienes cuenta? Inicia sesión aquí", color = MarronBoton)
-                    }
+                    TextButton(onClick = onBack, enabled = !loading) { Text("Volver", color = MarronBoton) }
+                    TextButton(onClick = onGoLogin, enabled = !loading) { Text("¿Ya tienes cuenta? Inicia sesión aquí", color = MarronBoton) }
                 }
             }
         }
