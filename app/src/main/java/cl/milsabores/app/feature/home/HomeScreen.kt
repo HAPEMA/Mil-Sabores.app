@@ -4,7 +4,6 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -33,7 +32,8 @@ fun HomeScreen(
     onGoManage: () -> Unit,
     onGoCart: () -> Unit,
     onGoProfile: () -> Unit,
-    onGoToContact: () -> Unit
+    onGoToContact: () -> Unit,
+    onGoProduct: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -41,7 +41,7 @@ fun HomeScreen(
             .background(CremaFondo)
             .verticalScroll(rememberScrollState())
     ) {
-        // HEADER GLOBAL
+
         MilSaboresTopBar(
             onGoHome = onGoHome,
             onGoManage = onGoManage,
@@ -53,14 +53,18 @@ fun HomeScreen(
 
         Spacer(Modifier.height(24.dp))
 
-        ProductsSection()
+        ProductsSection(
+            onGoProduct = onGoProduct
+        )
 
         Spacer(Modifier.height(32.dp))
     }
 }
 
 @Composable
-private fun HeroBanner(onContactClick: () -> Unit) {
+private fun HeroBanner(
+    onContactClick: () -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -72,7 +76,7 @@ private fun HeroBanner(onContactClick: () -> Unit) {
             contentScale = ContentScale.Crop,
             modifier = Modifier.matchParentSize()
         )
-        // Overlay semitransparente para mejorar legibilidad
+
         Box(
             modifier = Modifier
                 .matchParentSize()
@@ -93,13 +97,14 @@ private fun HeroBanner(onContactClick: () -> Unit) {
                     color = Color.White,
                     fontWeight = FontWeight.Bold
                 )
+
                 Spacer(Modifier.height(8.dp))
+
                 Text(
                     text = "Te ofrecemos una experiencia dulce y memorable, " +
-                            "proporcionando tortas y productos de repostería de alta calidad " +
-                            "para todas las ocasiones.",
+                            "proporcionando tortas y productos de repostería de alta calidad.",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.White,
+                    color = Color.White
                 )
             }
 
@@ -114,7 +119,9 @@ private fun HeroBanner(onContactClick: () -> Unit) {
 }
 
 @Composable
-private fun ProductsSection() {
+private fun ProductsSection(
+    onGoProduct: (String) -> Unit
+) {
     val context = LocalContext.current
 
     Column(
@@ -122,6 +129,7 @@ private fun ProductsSection() {
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
+
         Text(
             text = "Nuestros Productos",
             style = MaterialTheme.typography.headlineSmall,
@@ -131,93 +139,102 @@ private fun ProductsSection() {
         Spacer(Modifier.height(4.dp))
 
         Text(
-            text = "Explora nuestra selección de productos más destacados, cuidadosamente elegidos para ti.",
+            text = "Explora nuestra selección de productos destacados.",
             style = MaterialTheme.typography.bodyMedium
         )
 
         Spacer(Modifier.height(16.dp))
 
         if (ProductsStore.products.isEmpty()) {
-            Text("Aún no hay productos.", style = MaterialTheme.typography.bodyMedium)
-        } else {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                ProductsStore.products.forEach { product ->
-                    val categoryName =
-                        ProductsStore.categories.firstOrNull { it.id == product.categoryId }?.name
-                            ?: "Sin categoría"
+            Text("Aún no hay productos.")
+            return
+        }
 
-                    Card(
-                        shape = RoundedCornerShape(16.dp),
-                        elevation = CardDefaults.cardElevation(6.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(12.dp)
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            ProductsStore.products.forEach { product ->
+
+                val categoryName =
+                    ProductsStore.categories
+                        .firstOrNull { it.id == product.categoryId }
+                        ?.name ?: "Sin categoría"
+
+                Card(
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = CardDefaults.cardElevation(6.dp)
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(160.dp)
                         ) {
+                            AsyncImage(
+                                model = product.imageUrl,
+                                contentDescription = product.name,
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
+                            )
+
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .height(160.dp)
+                                    .background(Color.Black.copy(alpha = 0.25f))
+                                    .align(Alignment.BottomStart)
+                                    .padding(6.dp)
                             ) {
-                                AsyncImage(
-                                    model = product.imageUrl,
-                                    contentDescription = product.name,
-                                    modifier = Modifier.fillMaxSize(),
-                                    contentScale = ContentScale.Crop
+                                Text(
+                                    text = product.name,
+                                    color = Color.White,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.titleMedium
                                 )
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(Color.Black.copy(alpha = 0.25f))
-                                        .align(Alignment.BottomStart)
-                                        .padding(6.dp)
-                                ) {
-                                    Text(
-                                        text = product.name,
-                                        color = Color.White,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                }
                             }
+                        }
 
-                            Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(8.dp))
 
-                            Text(
-                                text = categoryName,
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MarronBoton
-                            )
+                        Text(
+                            text = categoryName,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MarronBoton
+                        )
 
-                            Spacer(Modifier.height(4.dp))
+                        Spacer(Modifier.height(4.dp))
 
-                            Text(
-                                text = "Precio: $${product.price}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
+                        Text(
+                            text = "Precio: $${product.price}",
+                            fontWeight = FontWeight.SemiBold
+                        )
 
-                            Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(8.dp))
 
-                            Button(
-                                onClick = {
-                                    CartStore.addToCart(product)
-                                    Toast.makeText(
-                                        context,
-                                        "Producto agregado al carrito",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = MarronBoton),
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(text = "Agregar al carrito")
-                            }
+                        Button(
+                            onClick = {
+                                CartStore.addToCart(product)
+                                Toast.makeText(
+                                    context,
+                                    "Producto agregado al carrito",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = MarronBoton),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Agregar al carrito")
+                        }
+
+                        Spacer(Modifier.height(6.dp))
+
+                        Button(
+                            onClick = { onGoProduct(product.id) },
+                            colors = ButtonDefaults.buttonColors(containerColor = MarronBoton),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Ver producto")
                         }
                     }
                 }
