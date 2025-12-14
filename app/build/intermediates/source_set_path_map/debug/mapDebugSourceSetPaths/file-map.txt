@@ -1,11 +1,11 @@
-cl.milsabores.app-pngs-0 C:\STGO\DuocUC\Mil-Sabores.app\app\build\generated\res\pngs\debug
-cl.milsabores.app-resValues-1 C:\STGO\DuocUC\Mil-Sabores.app\app\build\generated\res\resValues\debug
-cl.milsabores.app-updated_navigation_xml-2 C:\STGO\DuocUC\Mil-Sabores.app\app\build\generated\updated_navigation_xml\debug
-cl.milsabores.app-packageDebugResources-3 C:\STGO\DuocUC\Mil-Sabores.app\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
-cl.milsabores.app-packageDebugResources-4 C:\STGO\DuocUC\Mil-Sabores.app\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
-cl.milsabores.app-debug-5 C:\STGO\DuocUC\Mil-Sabores.app\app\build\intermediates\merged_res\debug\mergeDebugResources
-cl.milsabores.app-debug-6 C:\STGO\DuocUC\Mil-Sabores.app\app\src\debug\res
-cl.milsabores.app-main-7 C:\STGO\DuocUC\Mil-Sabores.app\app\src\main\res
+cl.milsabores.app-pngs-0 C:\STGO\Personales\Mil-Sabores.app\app\build\generated\res\pngs\debug
+cl.milsabores.app-resValues-1 C:\STGO\Personales\Mil-Sabores.app\app\build\generated\res\resValues\debug
+cl.milsabores.app-updated_navigation_xml-2 C:\STGO\Personales\Mil-Sabores.app\app\build\generated\updated_navigation_xml\debug
+cl.milsabores.app-packageDebugResources-3 C:\STGO\Personales\Mil-Sabores.app\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+cl.milsabores.app-packageDebugResources-4 C:\STGO\Personales\Mil-Sabores.app\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+cl.milsabores.app-debug-5 C:\STGO\Personales\Mil-Sabores.app\app\build\intermediates\merged_res\debug\mergeDebugResources
+cl.milsabores.app-debug-6 C:\STGO\Personales\Mil-Sabores.app\app\src\debug\res
+cl.milsabores.app-main-7 C:\STGO\Personales\Mil-Sabores.app\app\src\main\res
 cl.milsabores.app-jetified-animation-core-release-8 C:\Users\Soporte Ti\.gradle\caches\8.13\transforms\046dda7f7983c5fd1b45f1e65afbe876\transformed\jetified-animation-core-release\res
 cl.milsabores.app-jetified-activity-compose-1.8.2-9 C:\Users\Soporte Ti\.gradle\caches\8.13\transforms\050ac74aab6eda724d545af5c8e53d56\transformed\jetified-activity-compose-1.8.2\res
 cl.milsabores.app-jetified-ui-tooling-release-10 C:\Users\Soporte Ti\.gradle\caches\8.13\transforms\0eb481e5675ed13631f54c9eb92a2ca6\transformed\jetified-ui-tooling-release\res

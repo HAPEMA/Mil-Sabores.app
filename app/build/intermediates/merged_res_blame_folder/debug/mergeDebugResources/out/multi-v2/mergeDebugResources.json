@@ -6145,7 +6145,7 @@
                     }
                 },
                 {
-                    "source": "C:\\STGO\\DuocUC\\Mil-Sabores.app\\app\\src\\main\\res\\values\\strings.xml",
+                    "source": "C:\\STGO\\Personales\\Mil-Sabores.app\\app\\src\\main\\res\\values\\strings.xml",
                     "from": {
                         "startLines": "1",
                         "startColumns": "4",
@@ -6162,7 +6162,7 @@
                     }
                 },
                 {
-                    "source": "C:\\STGO\\DuocUC\\Mil-Sabores.app\\app\\src\\main\\res\\values\\colors.xml",
+                    "source": "C:\\STGO\\Personales\\Mil-Sabores.app\\app\\src\\main\\res\\values\\colors.xml",
                     "from": {
                         "startLines": "7,2,3,4,5,6,8",
                         "startColumns": "4,4,4,4,4,4,4",
@@ -6268,6 +6268,23 @@
                     }
                 },
                 {
+                    "source": "C:\\STGO\\Personales\\Mil-Sabores.app\\app\\src\\main\\res\\values\\themes.xml",
+                    "from": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "59",
+                        "endColumns": "87",
+                        "endOffsets": "142"
+                    },
+                    "to": {
+                        "startLines": "234",
+                        "startColumns": "4",
+                        "startOffsets": "14827",
+                        "endColumns": "86",
+                        "endOffsets": "14909"
+                    }
+                },
+                {
                     "source": "C:\\Users\\Soporte Ti\\.gradle\\caches\\8.13\\transforms\\a58466f1bd793aa7ad6925af32d03b6f\\transformed\\jetified-lifecycle-viewmodel-release\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2",
@@ -6299,23 +6316,6 @@
                         "startOffsets": "4774",
                         "endColumns": "65",
                         "endOffsets": "4835"
-                    }
-                },
-                {
-                    "source": "C:\\STGO\\DuocUC\\Mil-Sabores.app\\app\\src\\main\\res\\values\\themes.xml",
-                    "from": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "59",
-                        "endColumns": "87",
-                        "endOffsets": "142"
-                    },
-                    "to": {
-                        "startLines": "234",
-                        "startColumns": "4",
-                        "startOffsets": "14827",
-                        "endColumns": "86",
-                        "endOffsets": "14909"
                     }
                 },
                 {

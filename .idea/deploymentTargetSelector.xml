@@ -16,6 +16,9 @@
       <SelectionState runConfigName="DuocUC.Mil-Sabores.app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="Personales.Mil-Sabores.app">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>
