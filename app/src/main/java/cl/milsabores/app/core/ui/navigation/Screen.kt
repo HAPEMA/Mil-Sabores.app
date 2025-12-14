@@ -1,3 +1,5 @@
+package cl.milsabores.app.core.ui.navigation
+
 sealed class Screen(val route: String, val label: String) {
     data object Login : Screen("login", "Login")
     data object Register : Screen("register", "Register")

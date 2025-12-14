@@ -1,6 +1,10 @@
 package cl.milsabores.app.feature.category
 
-import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,19 +12,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import cl.milsabores.app.core.domain.model.Category
 import cl.milsabores.app.core.domain.model.ProductsStore
 import cl.milsabores.app.core.ui.components.MilSaboresTopBar
-import cl.milsabores.app.core.ui.theme.CremaFondo
-import cl.milsabores.app.core.ui.theme.MarronBoton
-import cl.milsabores.app.core.domain.model.Category
+import kotlinx.coroutines.launch
 
 @Composable
 fun CategoryScreen(
@@ -31,164 +31,197 @@ fun CategoryScreen(
     onDone: () -> Unit
 ) {
     val name = remember { mutableStateOf("") }
-    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(CremaFondo)
-    ) {
-        // HEADER GLOBAL
-        MilSaboresTopBar(
-            onGoHome = onGoHome,
-            onGoManage = onGoManage,
-            onGoCart = onGoCart,
-            onGoProfile = onGoProfile
-        )
+    var categoryToDelete by remember { mutableStateOf<Category?>(null) }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = MaterialTheme.colorScheme.background
+    ) { padding ->
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .background(MaterialTheme.colorScheme.background)
+                .padding(padding)
         ) {
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            MilSaboresTopBar(
+                onGoHome = onGoHome,
+                onGoManage = onGoManage,
+                onGoCart = onGoCart,
+                onGoProfile = onGoProfile
+            )
+
+            Column(modifier = Modifier.padding(16.dp)) {
+
+                // HEADER
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Categorías",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.weight(1f)
+                    )
+                    TextButton(onClick = onDone) { Text("Cerrar") }
+                }
+
                 Text(
-                    text = "Categorías",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.weight(1f)
+                    text = "Administra las categorías de tus productos.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
 
-                TextButton(onClick = onDone) {
-                    Text("Cerrar")
-                }
-            }
+                Spacer(Modifier.height(16.dp))
 
-            Spacer(Modifier.height(8.dp))
-
-            Text(
-                text = "Administra las categorías de tus productos.",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
-
-            // FORMULARIO
-            Card(
-                elevation = CardDefaults.cardElevation(4.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    OutlinedTextField(
-                        value = name.value,
-                        onValueChange = { name.value = it },
-                        label = { Text("Nombre de la categoría") },
-                        modifier = Modifier.fillMaxWidth()
+                // FORM
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
                     )
+                ) {
+                    Column(Modifier.padding(16.dp)) {
 
-                    Spacer(Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = name.value,
+                            onValueChange = { name.value = it },
+                            label = { Text("Nombre de la categoría") },
+                            isError = name.value.isBlank(),
+                            modifier = Modifier.fillMaxWidth()
+                        )
 
-                    Button(
-                        onClick = {
-                            val text = name.value.trim()
-                            if (text.isEmpty()) {
-                                Toast.makeText(
-                                    context,
-                                    "Escribe un nombre de categoría",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                return@Button
-                            }
+                        Spacer(Modifier.height(12.dp))
 
-                            val id = text.lowercase()
-                                .replace(" ", "_")
-                                .replace(Regex("[^a-z0-9_]"), "")
+                        Button(
+                            onClick = {
+                                val text = name.value.trim()
+                                val id = text.lowercase()
+                                    .replace(" ", "_")
+                                    .replace(Regex("[^a-z0-9_]"), "")
 
-                            val exists = ProductsStore.categories.any { it.id == id }
-                            if (exists) {
-                                Toast.makeText(
-                                    context,
-                                    "Ya existe una categoría con ese nombre",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
-                                ProductsStore.categories.add(
-                                    Category(
-                                        id = id,
-                                        name = text
-                                    )
-                                )
+                                if (ProductsStore.categories.any { it.id == id }) {
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            "La categoría ya existe",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                    return@Button
+                                }
+
+                                ProductsStore.categories.add(Category(id, text))
                                 name.value = ""
-                                Toast.makeText(
-                                    context,
-                                    "Categoría agregada",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MarronBoton
-                        ),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Agregar categoría")
+
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        "Categoría agregada correctamente",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
+                            },
+                            enabled = name.value.isNotBlank(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Agregar categoría")
+                        }
                     }
                 }
-            }
 
-            Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(24.dp))
 
-            Text(
-                text = "Listado",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
+                Text(
+                    text = "Listado",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
 
-            // LISTA + ELIMINAR
-            LazyColumn {
-                items(ProductsStore.categories, key = { it.id }) { category ->
-                    Card(
-                        elevation = CardDefaults.cardElevation(2.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                Spacer(Modifier.height(8.dp))
+
+                // LISTA CON ANIMACIÓN (SIN animateItemPlacement)
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(
+                        ProductsStore.categories,
+                        key = { it.id }
+                    ) { category ->
+
+                        AnimatedVisibility(
+                            visible = true,
+                            enter = fadeIn() + expandVertically(),
+                            exit = fadeOut() + shrinkVertically()
                         ) {
-                            Text(
-                                text = category.name,
-                                style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.weight(1f)
-                            )
-
-                            IconButton(onClick = {
-                                ProductsStore.products.removeAll { it.categoryId == category.id }
-                                ProductsStore.categories.remove(category)
-
-                                Toast.makeText(
-                                    context,
-                                    "Categoría eliminada",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = "Eliminar categoría",
-                                    tint = MaterialTheme.colorScheme.error
+                            Card(
+                                modifier = Modifier.fillMaxWidth(),
+                                elevation = CardDefaults.cardElevation(2.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.surface
                                 )
+                            ) {
+                                Row(
+                                    Modifier.padding(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = category.name,
+                                        modifier = Modifier.weight(1f),
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+
+                                    IconButton(
+                                        onClick = { categoryToDelete = category }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = "Eliminar",
+                                            tint = MaterialTheme.colorScheme.error
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
+        }
+
+        // DIALOG CONFIRMACIÓN
+        categoryToDelete?.let { category ->
+            AlertDialog(
+                onDismissRequest = { categoryToDelete = null },
+                confirmButton = {
+                    TextButton(onClick = {
+                        ProductsStore.products.removeAll {
+                            it.categoryId == category.id
+                        }
+                        ProductsStore.categories.remove(category)
+                        categoryToDelete = null
+
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                "Categoría eliminada",
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                    }) {
+                        Text("Eliminar", color = MaterialTheme.colorScheme.error)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { categoryToDelete = null }) {
+                        Text("Cancelar")
+                    }
+                },
+                title = { Text("Eliminar categoría") },
+                text = {
+                    Text(
+                        "Esta acción eliminará la categoría y todos sus productos. ¿Deseas continuar?"
+                    )
+                }
+            )
         }
     }
 }

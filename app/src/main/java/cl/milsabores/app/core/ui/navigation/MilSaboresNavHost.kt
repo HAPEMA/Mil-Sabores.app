@@ -16,6 +16,7 @@ import cl.milsabores.app.feature.profile.ProfileScreen
 import cl.milsabores.app.feature.contact.ContactScreen
 import cl.milsabores.app.feature.auth.login.LoginScreen
 import cl.milsabores.app.feature.auth.register.RegisterScreen
+import cl.milsabores.app.feature.product.ProductDetailScreen
 
 @Composable
 fun MilSaboresNavHost(
@@ -32,26 +33,30 @@ fun MilSaboresNavHost(
         // HOME
         composable(Screen.Home.route) {
             HomeScreen(
-                onGoHome = {
-                    navController.navigate(Screen.Home.route) {
-                        launchSingleTop = true
-                    }
-                },
+                onGoHome = { navController.navigate(Screen.Home.route) },
                 onGoManage = { navController.navigate(Screen.Manage.route) },
                 onGoCart = { navController.navigate(Screen.Cart.route) },
                 onGoProfile = { navController.navigate(Screen.Profile.route) },
-                onGoToContact = { navController.navigate(Screen.Contact.route) }
+                onGoToContact = { navController.navigate(Screen.Contact.route) },
+                onGoProduct = { productId ->
+                    navController.navigate("product/$productId")
+                }
+            )
+        }
+
+        // DETALLE PRODUCTO (sin navArgument)
+        composable("product/{productId}") { backStackEntry ->
+            val productId = backStackEntry.arguments?.getString("productId") ?: ""
+            ProductDetailScreen(
+                productId = productId,
+                onBack = { navController.popBackStack() }
             )
         }
 
         // GESTIÓN
         composable(Screen.Manage.route) {
             ManageScreen(
-                onGoHome = {
-                    navController.navigate(Screen.Home.route) {
-                        launchSingleTop = true
-                    }
-                },
+                onGoHome = { navController.navigate(Screen.Home.route) },
                 onGoManage = { navController.navigate(Screen.Manage.route) },
                 onGoCart = { navController.navigate(Screen.Cart.route) },
                 onGoProfile = { navController.navigate(Screen.Profile.route) },
@@ -61,14 +66,10 @@ fun MilSaboresNavHost(
             )
         }
 
-        // AGREGAR PRODUCTO
+        // CATALOGO / AGREGAR PRODUCTO
         composable(Screen.Catalog.route) {
             CatalogScreen(
-                onGoHome = {
-                    navController.navigate(Screen.Home.route) {
-                        launchSingleTop = true
-                    }
-                },
+                onGoHome = { navController.navigate(Screen.Home.route) },
                 onGoManage = { navController.navigate(Screen.Manage.route) },
                 onGoCart = { navController.navigate(Screen.Cart.route) },
                 onGoProfile = { navController.navigate(Screen.Profile.route) },
@@ -76,15 +77,10 @@ fun MilSaboresNavHost(
             )
         }
 
-
         // CATEGORÍAS
         composable(Screen.CategoryManage.route) {
             CategoryScreen(
-                onGoHome = {
-                    navController.navigate(Screen.Home.route) {
-                        launchSingleTop = true
-                    }
-                },
+                onGoHome = { navController.navigate(Screen.Home.route) },
                 onGoManage = { navController.navigate(Screen.Manage.route) },
                 onGoCart = { navController.navigate(Screen.Cart.route) },
                 onGoProfile = { navController.navigate(Screen.Profile.route) },
@@ -95,44 +91,34 @@ fun MilSaboresNavHost(
         // CARRITO
         composable(Screen.Cart.route) {
             CartScreen(
-                onGoHome = {
-                    navController.navigate(Screen.Home.route) {
-                        launchSingleTop = true
-                    }
-                },
+                onGoHome = { navController.navigate(Screen.Home.route) },
                 onGoManage = { navController.navigate(Screen.Manage.route) },
                 onGoCart = { navController.navigate(Screen.Cart.route) },
                 onGoProfile = { navController.navigate(Screen.Profile.route) }
             )
         }
 
-// PERFIL
+        // PERFIL
         composable(Screen.Profile.route) {
             ProfileScreen(
-                onGoHome = {
-                    navController.navigate(Screen.Home.route) {
-                        launchSingleTop = true
-                    }
-                },
+                onGoHome = { navController.navigate(Screen.Home.route) },
                 onGoManage = { navController.navigate(Screen.Manage.route) },
                 onGoCart = { navController.navigate(Screen.Cart.route) },
                 onGoProfile = { navController.navigate(Screen.Profile.route) }
             )
         }
 
+        // CONTACTO
         composable(Screen.Contact.route) {
             ContactScreen(
-                onGoHome = {
-                    navController.navigate(Screen.Home.route) {
-                        launchSingleTop = true
-                    }
-                },
+                onGoHome = { navController.navigate(Screen.Home.route) },
                 onGoManage = { navController.navigate(Screen.Manage.route) },
                 onGoCart = { navController.navigate(Screen.Cart.route) },
                 onGoProfile = { navController.navigate(Screen.Profile.route) }
             )
         }
 
+        // LOGIN
         composable(Screen.Login.route) {
             LoginScreen(
                 onLoginSuccess = {
