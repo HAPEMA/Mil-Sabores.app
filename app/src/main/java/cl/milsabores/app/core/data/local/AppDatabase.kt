@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
         CompraEntity::class,
         DetalleCompraEntity::class
     ],
-    version = 4,
+    version = 5, // súbelo cuando cambies entidades
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -39,16 +39,11 @@ abstract class AppDatabase : RoomDatabase() {
                     "mil_sabores.db"
                 )
                     .fallbackToDestructiveMigration()
-                    .addCallback(object : Callback() {
-
+                    .addCallback(object : RoomDatabase.Callback() {
                         override fun onOpen(db: SupportSQLiteDatabase) {
                             super.onOpen(db)
-
-                            // ✅ Inserta/asegura admin SIEMPRE (si ya existe, no duplica por IGNORE)
                             CoroutineScope(Dispatchers.IO).launch {
-                                val dao = get(context).userDao()
-
-                                dao.insertIgnore(
+                                get(context).userDao().insertIgnore(
                                     UserEntity(
                                         nombres = "Admin",
                                         apellidoP = "Mil",

@@ -15,10 +15,7 @@ import cl.milsabores.app.core.domain.session.SessionManager
 
 @Composable
 fun MilSaboresTopBar(
-    onGoHome: () -> Unit,
-    onGoManage: () -> Unit,
-    onGoCart: () -> Unit,
-    onGoProfile: () -> Unit
+    onGoHome: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -57,27 +54,6 @@ fun MilSaboresTopBar(
                     onClick = {
                         expanded = false
                         onGoHome()
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Gestionar") },
-                    onClick = {
-                        expanded = false
-                        onGoManage()
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Carrito") },
-                    onClick = {
-                        expanded = false
-                        onGoCart()
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Perfil") },
-                    onClick = {
-                        expanded = false
-                        onGoProfile()
                     }
                 )
             }

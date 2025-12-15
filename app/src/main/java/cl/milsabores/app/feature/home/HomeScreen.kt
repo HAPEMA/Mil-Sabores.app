@@ -22,7 +22,6 @@ import coil.compose.AsyncImage
 import cl.milsabores.app.R
 import cl.milsabores.app.core.domain.model.CartStore
 import cl.milsabores.app.core.domain.model.ProductsStore
-import cl.milsabores.app.core.ui.components.MilSaboresTopBar
 import cl.milsabores.app.core.ui.theme.CremaFondo
 import kotlinx.coroutines.launch
 
@@ -50,12 +49,6 @@ fun HomeScreen(
                 .background(CremaFondo)
                 .verticalScroll(rememberScrollState())
         ) {
-            MilSaboresTopBar(
-                onGoHome = onGoHome,
-                onGoManage = onGoManage,
-                onGoCart = onGoCart,
-                onGoProfile = onGoProfile
-            )
 
             HeroBanner(onContactClick = onGoToContact)
 

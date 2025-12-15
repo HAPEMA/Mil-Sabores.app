@@ -19,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cl.milsabores.app.core.domain.model.Category
 import cl.milsabores.app.core.domain.model.ProductsStore
-import cl.milsabores.app.core.ui.components.MilSaboresTopBar
 import kotlinx.coroutines.launch
 
 @Composable
@@ -47,13 +46,6 @@ fun CategoryScreen(
                 .background(MaterialTheme.colorScheme.background)
                 .padding(padding)
         ) {
-
-            MilSaboresTopBar(
-                onGoHome = onGoHome,
-                onGoManage = onGoManage,
-                onGoCart = onGoCart,
-                onGoProfile = onGoProfile
-            )
 
             Column(modifier = Modifier.padding(16.dp)) {
 

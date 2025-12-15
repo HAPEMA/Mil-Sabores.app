@@ -14,27 +14,22 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import cl.milsabores.app.core.domain.session.SessionManager
-
 @Composable
 fun MilSaboresBottomBar(navController: NavHostController) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-//    val navBackStackEntry = navController.currentBackStackEntryAsState().value
-//    val currentDestination = navBackStackEntry?.destination
+
     val items = buildList {
         add(Screen.Home to Icons.Filled.Home)
-
-        if (SessionManager.isAdmin) {
-            add(Screen.Manage to Icons.Filled.List)
-        }
-
+        if (SessionManager.isAdmin) add(Screen.Manage to Icons.Filled.List)
         add(Screen.Cart to Icons.Filled.ShoppingCart)
         add(Screen.Profile to Icons.Filled.Person)
     }
 
+    val navBackStackEntry = navController.currentBackStackEntryAsState().value
+    val currentDestination = navBackStackEntry?.destination
+
     NavigationBar {
         items.forEach { (screen, icon) ->
-            val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+            val selected = currentDestination.isRouteInHierarchy(screen.route)
 
             NavigationBarItem(
                 selected = selected,
@@ -51,7 +46,6 @@ fun MilSaboresBottomBar(navController: NavHostController) {
         }
     }
 }
-
 
 private fun NavDestination?.isRouteInHierarchy(route: String): Boolean =
     this?.hierarchy?.any { it.route == route } == true

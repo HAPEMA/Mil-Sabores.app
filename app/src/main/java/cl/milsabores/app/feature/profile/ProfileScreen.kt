@@ -15,7 +15,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import cl.milsabores.app.core.ui.components.MilSaboresTopBar
 import cl.milsabores.app.core.ui.theme.CremaFondo
 
 @Composable
@@ -36,12 +35,7 @@ fun ProfileScreen(
             .fillMaxSize()
             .background(CremaFondo)
     ) {
-        MilSaboresTopBar(
-            onGoHome = onGoHome,
-            onGoManage = onGoManage,
-            onGoCart = onGoCart,
-            onGoProfile = onGoProfile
-        )
+
 
         AnimatedVisibility(
             visible = screenVisible,

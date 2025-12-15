@@ -3,10 +3,12 @@ package cl.milsabores.app.core.ui.navigation
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import cl.milsabores.app.core.domain.session.SessionManager
 import cl.milsabores.app.feature.admin.ManageScreen
 import cl.milsabores.app.feature.cart.CartScreen
 import cl.milsabores.app.feature.catalog.CatalogScreen
@@ -26,11 +28,11 @@ fun MilSaboresNavHost(
 ) {
     NavHost(
         navController = navController,
-        //Funcion que renderiza la pantalla inicial (en este caso el login)
         startDestination = Screen.Login.route,
         modifier = modifier.padding(innerPadding)
     ) {
-        // HOME
+        composable(Screen.Login.route) { /* ... */ }
+
         composable(Screen.Home.route) {
             HomeScreen(
                 onGoHome = { navController.navigate(Screen.Home.route) },
@@ -38,9 +40,7 @@ fun MilSaboresNavHost(
                 onGoCart = { navController.navigate(Screen.Cart.route) },
                 onGoProfile = { navController.navigate(Screen.Profile.route) },
                 onGoToContact = { navController.navigate(Screen.Contact.route) },
-                onGoProduct = { productId ->
-                    navController.navigate("product/$productId")
-                }
+                onGoProduct = { productId -> navController.navigate("product/$productId") }
             )
         }
 

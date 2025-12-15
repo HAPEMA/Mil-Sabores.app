@@ -11,9 +11,9 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,8 +28,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import cl.milsabores.app.core.data.local.DatabaseProvider
+import cl.milsabores.app.core.data.local.purchase.entity.CompraEntity
+import cl.milsabores.app.core.data.local.purchase.entity.DetalleCompraEntity
 import cl.milsabores.app.core.domain.model.CartStore
-import cl.milsabores.app.core.ui.components.MilSaboresTopBar
+import cl.milsabores.app.core.domain.session.SessionManager
 import cl.milsabores.app.core.ui.theme.CremaFondo
 import cl.milsabores.app.core.ui.theme.MarronBoton
 import kotlinx.coroutines.delay
@@ -52,16 +55,10 @@ fun CartScreen(
             .fillMaxSize()
             .background(CremaFondo)
     ) {
-        MilSaboresTopBar(
-            onGoHome = onGoHome,
-            onGoManage = onGoManage,
-            onGoCart = onGoCart,
-            onGoProfile = onGoProfile
-        )
 
         Column(modifier = Modifier.padding(16.dp)) {
 
-            // Header animado
+            // Header
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -90,7 +87,7 @@ fun CartScreen(
                     }
                 }
 
-                // Icono del carrito con badge animado
+                // Icono carrito + badge
                 Box {
                     Icon(
                         imageVector = Icons.Default.ShoppingCart,
@@ -99,7 +96,7 @@ fun CartScreen(
                         modifier = Modifier.size(32.dp)
                     )
 
-                    androidx.compose.animation.AnimatedVisibility(
+                    this@Row.AnimatedVisibility(
                         visible = CartStore.items.isNotEmpty(),
                         enter = scaleIn(spring(dampingRatio = Spring.DampingRatioMediumBouncy)),
                         modifier = Modifier.align(Alignment.TopEnd)
@@ -122,26 +119,23 @@ fun CartScreen(
             if (CartStore.items.isEmpty()) {
                 EmptyCartView()
             } else {
-                // Lista con animaciones
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.weight(1f)
                 ) {
                     itemsIndexed(
-                        items = CartStore.items.toList(), // Forzar recomposición
+                        items = CartStore.items.toList(),
                         key = { _, item -> item.product.id }
                     ) { index, item ->
                         AnimatedCartItemCard(
                             item = item,
-                            index = index,
-                            onUpdateQuantity = { } // Ya no se usa, se maneja directo en el componente
+                            index = index
                         )
                     }
                 }
 
                 Spacer(Modifier.height(16.dp))
 
-                // Resumen con animación
                 AnimatedSummaryCard(
                     onCheckout = { showCheckoutDialog = true }
                 )
@@ -149,7 +143,7 @@ fun CartScreen(
         }
     }
 
-    // Diálogo de confirmación
+    // ✅ Dialog checkout (fuera del Column principal)
     if (showCheckoutDialog) {
         AlertDialog(
             onDismissRequest = { showCheckoutDialog = false },
@@ -160,12 +154,7 @@ fun CartScreen(
                     tint = MarronBoton
                 )
             },
-            title = {
-                Text(
-                    text = "Confirmar Compra",
-                    fontWeight = FontWeight.Bold
-                )
-            },
+            title = { Text("Confirmar Compra", fontWeight = FontWeight.Bold) },
             text = {
                 Column {
                     Text("¿Deseas completar tu compra?")
@@ -180,18 +169,51 @@ fun CartScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        showCheckoutDialog = false
-                        Toast.makeText(
-                            context,
-                            "¡Compra realizada con éxito! 🎉",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        CartStore.clear()
+                        scope.launch {
+                            val user = SessionManager.currentUser
+                            if (user == null) {
+                                Toast.makeText(context, "Debes iniciar sesión", Toast.LENGTH_SHORT).show()
+                                return@launch
+                            }
+
+                            try {
+                                val db = DatabaseProvider.get(context)
+                                val compraDao = db.compraDao()
+
+                                val total = CartStore.getTotal()
+
+                                // 1) Insert compra
+                                val compraId = compraDao.insertCompra(
+                                    CompraEntity(
+                                        usuarioId = user.id,
+                                        total = total
+                                    )
+                                )
+
+                                // 2) Insert detalles
+                                val detalles = CartStore.items.map { ci ->
+                                    DetalleCompraEntity(
+                                        compraId = compraId,
+                                        productoId = ci.product.id,
+                                        nombre = ci.product.name,
+                                        precio = ci.product.price,
+                                        cantidad = ci.quantity,
+                                        fotoUrl = ci.product.imageUrl
+                                    )
+                                }
+                                compraDao.insertDetalles(detalles)
+
+                                CartStore.clear()
+                                showCheckoutDialog = false
+                                Toast.makeText(context, "¡Compra guardada! ✅", Toast.LENGTH_LONG).show()
+
+                            } catch (e: Exception) {
+                                Toast.makeText(context, "Error guardando compra: ${e.message}", Toast.LENGTH_LONG).show()
+                            }
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(MarronBoton)
-                ) {
-                    Text("Confirmar")
-                }
+                ) { Text("Confirmar") }
             },
             dismissButton = {
                 TextButton(onClick = { showCheckoutDialog = false }) {
@@ -203,10 +225,9 @@ fun CartScreen(
 }
 
 @Composable
-fun AnimatedCartItemCard(
+private fun AnimatedCartItemCard(
     item: CartStore.CartItem,
-    index: Int,
-    onUpdateQuantity: (Int) -> Unit
+    index: Int
 ) {
     var visible by remember { mutableStateOf(false) }
     var isRemoving by remember { mutableStateOf(false) }
@@ -240,7 +261,6 @@ fun AnimatedCartItemCard(
                 modifier = Modifier.padding(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Imagen con esquinas redondeadas
                 AsyncImage(
                     model = item.product.imageUrl,
                     contentDescription = item.product.name,
@@ -264,7 +284,7 @@ fun AnimatedCartItemCard(
                     Spacer(Modifier.height(4.dp))
 
                     Text(
-                        text = "${item.product.price}",
+                        text = "$${item.product.price}",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MarronBoton
@@ -272,7 +292,6 @@ fun AnimatedCartItemCard(
 
                     Spacer(Modifier.height(8.dp))
 
-                    // Selector de cantidad animado
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -280,28 +299,22 @@ fun AnimatedCartItemCard(
                         QuantitySelector(
                             quantity = item.quantity,
                             onIncrease = {
-                                val currentItem = CartStore.items.find { it.product.id == item.product.id }
-                                currentItem?.let {
-                                    CartStore.updateQuantity(item.product.id, it.quantity + 1)
-                                }
+                                CartStore.updateQuantity(item.product.id, item.quantity + 1)
                             },
                             onDecrease = {
-                                val currentItem = CartStore.items.find { it.product.id == item.product.id }
-                                currentItem?.let {
-                                    if (it.quantity > 1) {
-                                        CartStore.updateQuantity(item.product.id, it.quantity - 1)
-                                    }
+                                if (item.quantity > 1) {
+                                    CartStore.updateQuantity(item.product.id, item.quantity - 1)
                                 }
                             }
                         )
 
                         Spacer(Modifier.weight(1f))
 
-                        // Botón eliminar con animación
                         var deletePressed by remember { mutableStateOf(false) }
                         val deleteScale by animateFloatAsState(
                             targetValue = if (deletePressed) 0.85f else 1f,
-                            animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+                            animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy),
+                            label = "deleteScale"
                         )
 
                         IconButton(
@@ -337,7 +350,7 @@ fun AnimatedCartItemCard(
 }
 
 @Composable
-fun QuantitySelector(
+private fun QuantitySelector(
     quantity: Int,
     onIncrease: () -> Unit,
     onDecrease: () -> Unit
@@ -345,10 +358,7 @@ fun QuantitySelector(
     val scale = remember { Animatable(1f) }
     val scope = rememberCoroutineScope()
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         IconButton(
             onClick = {
                 onDecrease()
@@ -361,36 +371,15 @@ fun QuantitySelector(
                 .size(32.dp)
                 .background(Color(0xFFF5F5F5), CircleShape)
         ) {
-            Text(
-                text = "−",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = MarronBoton
-            )
+            Text("−", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = MarronBoton)
         }
 
-        AnimatedContent(
-            targetState = quantity,
-            transitionSpec = {
-                if (targetState > initialState) {
-                    slideInVertically { it } + fadeIn() togetherWith
-                            slideOutVertically { -it } + fadeOut()
-                } else {
-                    slideInVertically { -it } + fadeIn() togetherWith
-                            slideOutVertically { it } + fadeOut()
-                }
-            },
-            label = "quantity"
-        ) { count ->
-            Text(
-                text = count.toString(),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .scale(scale.value)
-                    .padding(horizontal = 12.dp)
-            )
-        }
+        Text(
+            text = quantity.toString(),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.scale(scale.value).padding(horizontal = 12.dp)
+        )
 
         IconButton(
             onClick = {
@@ -404,63 +393,31 @@ fun QuantitySelector(
                 .size(32.dp)
                 .background(MarronBoton, CircleShape)
         ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Aumentar",
-                tint = Color.White,
-                modifier = Modifier.size(16.dp)
-            )
+            Icon(Icons.Default.Add, contentDescription = "Aumentar", tint = Color.White, modifier = Modifier.size(16.dp))
         }
     }
 }
 
 @Composable
-fun AnimatedSummaryCard(onCheckout: () -> Unit) {
-    var pressed by remember { mutableStateOf(false) }
-    val scale by animateFloatAsState(
-        targetValue = if (pressed) 0.97f else 1f,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
-    )
-
+private fun AnimatedSummaryCard(onCheckout: () -> Unit) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .scale(scale),
+        modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         shape = RoundedCornerShape(16.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "Resumen de la compra",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
+            Text("Resumen de la compra", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
 
             Spacer(Modifier.height(12.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text("Total de productos:", style = MaterialTheme.typography.bodyLarge)
                 Text(
-                    text = "Total de productos:",
-                    style = MaterialTheme.typography.bodyLarge
+                    text = CartStore.items.sumOf { it.quantity }.toString(),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
                 )
-                AnimatedContent(
-                    targetState = CartStore.items.sumOf { it.quantity },
-                    transitionSpec = {
-                        slideInVertically { it } + fadeIn() togetherWith
-                                slideOutVertically { -it } + fadeOut()
-                    },
-                    label = "total_items"
-                ) { total ->
-                    Text(
-                        text = total.toString(),
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
             }
 
             Spacer(Modifier.height(8.dp))
@@ -470,26 +427,13 @@ fun AnimatedSummaryCard(onCheckout: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Text("Total a pagar:", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
                 Text(
-                    text = "Total a pagar:",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
+                    text = "$${CartStore.getTotal()}",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MarronBoton
                 )
-                AnimatedContent(
-                    targetState = CartStore.getTotal(),
-                    transitionSpec = {
-                        slideInVertically { it } + fadeIn() togetherWith
-                                slideOutVertically { -it } + fadeOut()
-                    },
-                    label = "total_price"
-                ) { total ->
-                    Text(
-                        text = "$${total}",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MarronBoton
-                    )
-                }
             }
 
             Spacer(Modifier.height(16.dp))
@@ -497,32 +441,17 @@ fun AnimatedSummaryCard(onCheckout: () -> Unit) {
             Button(
                 onClick = onCheckout,
                 colors = ButtonDefaults.buttonColors(MarronBoton),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .pointerInput(Unit) {
-                        detectTapGestures(
-                            onPress = {
-                                pressed = true
-                                tryAwaitRelease()
-                                pressed = false
-                            }
-                        )
-                    },
+                modifier = Modifier.fillMaxWidth().height(56.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text(
-                    text = "Proceder al Pago",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                Text("Proceder al Pago", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
 }
 
 @Composable
-fun EmptyCartView() {
+private fun EmptyCartView() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -530,44 +459,15 @@ fun EmptyCartView() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        var visible by remember { mutableStateOf(false) }
-
-        LaunchedEffect(Unit) {
-            visible = true
-        }
-
-        AnimatedVisibility(
-            visible = visible,
-            enter = scaleIn(
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessLow
-                )
-            ) + fadeIn()
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ShoppingCart,
-                    contentDescription = null,
-                    tint = Color(0xFFBDBDBD),
-                    modifier = Modifier.size(120.dp)
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    text = "Tu carrito está vacío",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF9E9E9E)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Agrega productos para comenzar",
-                    fontSize = 14.sp,
-                    color = Color(0xFFBDBDBD)
-                )
-            }
-        }
+        Icon(
+            imageVector = Icons.Default.ShoppingCart,
+            contentDescription = null,
+            tint = Color(0xFFBDBDBD),
+            modifier = Modifier.size(120.dp)
+        )
+        Spacer(Modifier.height(24.dp))
+        Text("Tu carrito está vacío", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF9E9E9E))
+        Spacer(Modifier.height(8.dp))
+        Text("Agrega productos para comenzar", fontSize = 14.sp, color = Color(0xFFBDBDBD))
     }
 }

@@ -8,7 +8,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import cl.milsabores.app.core.ui.components.MilSaboresTopBar
 import cl.milsabores.app.core.ui.theme.CremaFondo
 import cl.milsabores.app.core.ui.theme.MarronBoton
 
@@ -27,12 +26,7 @@ fun ManageScreen(
             .fillMaxSize()
             .background(CremaFondo)
     ) {
-        MilSaboresTopBar(
-            onGoHome = onGoHome,
-            onGoManage = onGoManage,
-            onGoCart = onGoCart,
-            onGoProfile = onGoProfile
-        )
+
 
         Column(
             modifier = Modifier
