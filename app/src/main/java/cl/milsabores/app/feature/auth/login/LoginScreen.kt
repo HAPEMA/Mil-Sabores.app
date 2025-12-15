@@ -22,6 +22,11 @@ import cl.milsabores.app.core.ui.theme.CremaFondo
 import cl.milsabores.app.core.ui.theme.MarronBoton
 import cl.milsabores.app.core.ui.theme.TextoPrincipal
 import kotlinx.coroutines.launch
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import cl.milsabores.app.core.data.local.AppDatabase
+import cl.milsabores.app.core.data.local.DatabaseProvider
+import cl.milsabores.app.core.domain.session.SessionManager
 
 @Composable
 fun LoginScreen(
@@ -35,7 +40,7 @@ fun LoginScreen(
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-
+    val context = LocalContext.current
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = CremaFondo
@@ -114,29 +119,24 @@ fun LoginScreen(
                     Button(
                         onClick = {
                             scope.launch {
-                                loading = true
-                                try {
-                                    val ok = AuthFakeStore.login(email, password)
-                                    if (ok) {
-                                        snackbarHostState.showSnackbar("Login exitoso ✅")
-                                        onLoginSuccess()
-                                    } else {
-                                        snackbarHostState.showSnackbar("Credenciales inválidas ❌")
-                                    }
-                                } finally {
-                                    loading = false
+                                val db = AppDatabase.get(context)
+                                val user = db.userDao().findByEmail(email.trim())
+
+                                if (user != null && user.password == password) {
+                                    SessionManager.currentUser = user
+                                    onLoginSuccess()
+                                } else {
+                                    snackbarHostState.showSnackbar("Credenciales incorrectas")
                                 }
                             }
                         },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(52.dp),
-                        shape = MaterialTheme.shapes.large,
-                        colors = ButtonDefaults.buttonColors(containerColor = MarronBoton),
-                        enabled = !loading
+                        enabled = !loading,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = MarronBoton)
                     ) {
-                        Text("Iniciar Sesión", color = Blanco, fontWeight = FontWeight.Bold)
+                        Text("Iniciar Sesión", color = Blanco)
                     }
+
 
                     Spacer(Modifier.height(14.dp))
 

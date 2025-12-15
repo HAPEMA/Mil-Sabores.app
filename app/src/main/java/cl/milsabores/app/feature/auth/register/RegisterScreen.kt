@@ -14,10 +14,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cl.milsabores.app.core.data.local.DatabaseProvider
+import cl.milsabores.app.core.data.local.user.UserEntity
 import cl.milsabores.app.core.domain.model.AuthFakeStore
 import cl.milsabores.app.core.ui.theme.Blanco
 import cl.milsabores.app.core.ui.theme.CremaFondo
@@ -41,6 +44,7 @@ fun RegisterScreen(
     var loading by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -131,27 +135,53 @@ fun RegisterScreen(
 
                     Button(
                         onClick = {
+                            val em = email.trim()
+                            val pw = password
+
                             scope.launch {
                                 loading = true
                                 try {
-                                    val ok = AuthFakeStore.register(email, password)
-                                    if (ok) {
-                                        snackbarHostState.showSnackbar("Registro exitoso ✅")
-                                        onGoLogin()
-                                    } else {
-                                        snackbarHostState.showSnackbar("No se pudo registrar (correo ya existe o campos vacíos) ❌")
+                                    val db = DatabaseProvider.get(context)
+                                    val dao = db.userDao()
+
+                                    if (em.isBlank() || pw.isBlank()) {
+                                        snackbarHostState.showSnackbar("Completa correo y contraseña.")
+                                        return@launch
                                     }
+
+                                    val exists = dao.findByEmail(em)
+                                    if (exists != null) {
+                                        snackbarHostState.showSnackbar("Ese correo ya está registrado.")
+                                        return@launch
+                                    }
+
+                                    dao.insert(
+                                        UserEntity(
+                                            nombres = nombres.trim(),
+                                            apellidoP = apellidoP.trim(),
+                                            apellidoM = apellidoM.trim(),
+                                            email = em,
+                                            password = pw,
+                                            birthDate = birthDate.trim(),
+                                            rol = "cliente"
+                                        )
+                                    )
+
+                                    snackbarHostState.showSnackbar("Registro exitoso ✅")
+                                    onGoLogin()
+
+                                } catch (e: Exception) {
+                                    snackbarHostState.showSnackbar("Error: ${e.message}")
                                 } finally {
                                     loading = false
                                 }
                             }
                         },
-                        modifier = Modifier.fillMaxWidth().height(52.dp),
-                        shape = MaterialTheme.shapes.large,
-                        colors = ButtonDefaults.buttonColors(containerColor = MarronBoton),
-                        enabled = !loading
+                        enabled = !loading,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = MarronBoton)
                     ) {
-                        Text("Registrarme", color = Blanco, fontWeight = FontWeight.Bold)
+                        Text("Registrarme", color = Blanco)
                     }
 
                     Spacer(Modifier.height(12.dp))

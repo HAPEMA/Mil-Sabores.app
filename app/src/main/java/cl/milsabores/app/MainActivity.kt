@@ -4,9 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import cl.milsabores.app.core.ui.navigation.MilSaboresNavHost
+import androidx.compose.material3.Scaffold
 import androidx.navigation.compose.rememberNavController
+import cl.milsabores.app.core.ui.navigation.MilSaboresBottomBar
+import cl.milsabores.app.core.ui.navigation.MilSaboresNavHost
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,15 +15,18 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MaterialTheme {
-                Surface {
-                    val navController = rememberNavController()
+                val navController = rememberNavController()
 
+                Scaffold(
+                    bottomBar = { MilSaboresBottomBar(navController) }
+                ) { innerPadding ->
                     MilSaboresNavHost(
                         navController = navController,
-                        innerPadding = androidx.compose.foundation.layout.PaddingValues()
+                        innerPadding = innerPadding
                     )
                 }
             }
         }
     }
 }
+

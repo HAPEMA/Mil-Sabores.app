@@ -124,18 +124,17 @@ fun MilSaboresNavHost(
                 onLoginSuccess = {
                     navController.navigate(Screen.Home.route) {
                         popUpTo(Screen.Login.route) { inclusive = true }
-                        launchSingleTop = true
                     }
                 },
                 onGoRegister = { navController.navigate(Screen.Register.route) },
-                onBack = { /* opcional: navController.popBackStack() */ }
+                onBack = { /* opcional */ }
             )
         }
 
         composable(Screen.Register.route) {
             RegisterScreen(
-                onRegisterSuccess = { /* si quieres, directo a home */ },
-                onGoLogin = { navController.popBackStack() }, // vuelve al login
+                onRegisterSuccess = { /* si quieres ir directo a home */ },
+                onGoLogin = { navController.popBackStack() },
                 onBack = { navController.popBackStack() }
             )
         }

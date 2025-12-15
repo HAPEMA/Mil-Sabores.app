@@ -1,5 +1,4 @@
 package cl.milsabores.app.feature.home
-import androidx.compose.ui.graphics.Brush
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,11 +12,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import cl.milsabores.app.R
@@ -25,7 +24,6 @@ import cl.milsabores.app.core.domain.model.CartStore
 import cl.milsabores.app.core.domain.model.ProductsStore
 import cl.milsabores.app.core.ui.components.MilSaboresTopBar
 import cl.milsabores.app.core.ui.theme.CremaFondo
-import cl.milsabores.app.core.ui.theme.MarronBoton
 import kotlinx.coroutines.launch
 
 @Composable
@@ -41,7 +39,8 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
 
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = CremaFondo
     ) { padding ->
 
         Column(
@@ -51,7 +50,6 @@ fun HomeScreen(
                 .background(CremaFondo)
                 .verticalScroll(rememberScrollState())
         ) {
-
             MilSaboresTopBar(
                 onGoHome = onGoHome,
                 onGoManage = onGoManage,
@@ -67,7 +65,6 @@ fun HomeScreen(
                 onGoProduct = onGoProduct,
                 onAddToCart = { product ->
                     CartStore.addToCart(product)
-
                     scope.launch {
                         snackbarHostState.showSnackbar(
                             message = "Producto agregado al carrito 🛒",
@@ -81,10 +78,9 @@ fun HomeScreen(
         }
     }
 }
+
 @Composable
-private fun HeroBanner(
-    onContactClick: () -> Unit
-) {
+private fun HeroBanner(onContactClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -97,7 +93,6 @@ private fun HeroBanner(
             modifier = Modifier.matchParentSize()
         )
 
-        // Overlay con gradiente (MUCHO mejor que color plano)
         Box(
             modifier = Modifier
                 .matchParentSize()
@@ -118,8 +113,6 @@ private fun HeroBanner(
                 .padding(horizontal = 20.dp, vertical = 28.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-
-            // TEXTO
             Column {
                 Text(
                     text = "Mil Sabores",
@@ -134,8 +127,7 @@ private fun HeroBanner(
                     text = "Repostería artesanal\npara momentos especiales",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    lineHeight = MaterialTheme.typography.headlineMedium.lineHeight
+                    color = Color.White
                 )
 
                 Spacer(Modifier.height(8.dp))
@@ -147,20 +139,15 @@ private fun HeroBanner(
                 )
             }
 
-            // CTA
             Button(
                 onClick = onContactClick,
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary
                 ),
-                modifier = Modifier
-                    .height(48.dp)
+                modifier = Modifier.height(48.dp)
             ) {
-                Text(
-                    text = "Contáctanos",
-                    style = MaterialTheme.typography.labelLarge
-                )
+                Text("Contáctanos", style = MaterialTheme.typography.labelLarge)
             }
         }
     }
@@ -176,7 +163,6 @@ private fun ProductsSection(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
-
         Text(
             text = "Nuestros Productos",
             style = MaterialTheme.typography.headlineSmall,
@@ -203,9 +189,8 @@ private fun ProductsSection(
             ProductsStore.products.forEach { product ->
 
                 val categoryName =
-                    ProductsStore.categories
-                        .firstOrNull { it.id == product.categoryId }
-                        ?.name ?: "Sin categoría"
+                    ProductsStore.categories.firstOrNull { it.id == product.categoryId }?.name
+                        ?: "Sin categoría"
 
                 Card(
                     shape = RoundedCornerShape(20.dp),
@@ -213,8 +198,6 @@ private fun ProductsSection(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column {
-
-                        // IMAGEN
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -274,4 +257,3 @@ private fun ProductsSection(
         }
     }
 }
-

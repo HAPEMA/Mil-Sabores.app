@@ -1,46 +1,48 @@
 package cl.milsabores.app.core.ui.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import cl.milsabores.app.core.domain.session.SessionManager
 
 @Composable
 fun MilSaboresBottomBar(navController: NavHostController) {
-    val items = listOf(
-        Screen.Home to Icons.Filled.Home,
-        Screen.Manage to Icons.Filled.List,
-        Screen.Cart to Icons.Filled.ShoppingCart,
-        Screen.Profile to Icons.Filled.Person,
-        Screen.Login to Icons.Filled.AccountCircle,
-        Screen.Register to Icons.Filled.Add
-    )
-
-    val navBackStackEntry = navController.currentBackStackEntryAsState().value
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+//    val navBackStackEntry = navController.currentBackStackEntryAsState().value
+//    val currentDestination = navBackStackEntry?.destination
+    val items = buildList {
+        add(Screen.Home to Icons.Filled.Home)
+
+        if (SessionManager.isAdmin) {
+            add(Screen.Manage to Icons.Filled.List)
+        }
+
+        add(Screen.Cart to Icons.Filled.ShoppingCart)
+        add(Screen.Profile to Icons.Filled.Person)
+    }
 
     NavigationBar {
-        items.forEach { (screen, icon: ImageVector) ->
-            val selected = currentDestination.isRouteInHierarchy(screen.route)
+        items.forEach { (screen, icon) ->
+            val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
 
             NavigationBarItem(
                 selected = selected,
                 onClick = {
                     navController.navigate(screen.route) {
                         launchSingleTop = true
+                        restoreState = true
+                        popUpTo(navController.graph.startDestinationId) { saveState = true }
                     }
                 },
                 icon = { Icon(icon, contentDescription = screen.label) },
@@ -49,6 +51,7 @@ fun MilSaboresBottomBar(navController: NavHostController) {
         }
     }
 }
+
 
 private fun NavDestination?.isRouteInHierarchy(route: String): Boolean =
     this?.hierarchy?.any { it.route == route } == true
