@@ -135,35 +135,68 @@ fun RegisterScreen(
 
                     Button(
                         onClick = {
+                            val nom = nombres.trim()
+                            val apP = apellidoP.trim()
+                            val apM = apellidoM.trim()
                             val em = email.trim()
-                            val pw = password
+                            val pw = password.trim()
+                            val bd = birthDate.trim()
 
                             scope.launch {
                                 loading = true
                                 try {
+                                    // ===== VALIDACIONES =====
+                                    when {
+                                        !isValidName(nom) -> {
+                                            snackbarHostState.showSnackbar("Nombre inválido (mínimo 2 letras).")
+                                            return@launch
+                                        }
+                                        !isValidName(apP) -> {
+                                            snackbarHostState.showSnackbar("Apellido paterno inválido.")
+                                            return@launch
+                                        }
+                                        apM.isNotBlank() && !isValidName(apM) -> {
+                                            snackbarHostState.showSnackbar("Apellido materno inválido.")
+                                            return@launch
+                                        }
+                                        em.isBlank() -> {
+                                            snackbarHostState.showSnackbar("El correo es obligatorio.")
+                                            return@launch
+                                        }
+                                        !isValidEmail(em) -> {
+                                            snackbarHostState.showSnackbar("Correo inválido.")
+                                            return@launch
+                                        }
+                                        !isValidPassword(pw) -> {
+                                            snackbarHostState.showSnackbar("La contraseña debe tener al menos 8 caracteres.")
+                                            return@launch
+                                        }
+                                        bd.isBlank() -> {
+                                            snackbarHostState.showSnackbar("La fecha de nacimiento es obligatoria.")
+                                            return@launch
+                                        }
+                                    }
+
                                     val db = DatabaseProvider.get(context)
                                     val dao = db.userDao()
 
-                                    if (em.isBlank() || pw.isBlank()) {
-                                        snackbarHostState.showSnackbar("Completa correo y contraseña.")
-                                        return@launch
-                                    }
-
+                                    // ===== EMAIL DUPLICADO =====
                                     val exists = dao.findByEmail(em)
                                     if (exists != null) {
                                         snackbarHostState.showSnackbar("Ese correo ya está registrado.")
                                         return@launch
                                     }
 
+                                    // ===== INSERT =====
                                     dao.insert(
                                         UserEntity(
-                                            nombres = nombres.trim(),
-                                            apellidoP = apellidoP.trim(),
-                                            apellidoM = apellidoM.trim(),
+                                            nombres = nom,
+                                            apellidoP = apP,
+                                            apellidoM = apM,
                                             email = em,
                                             password = pw,
-                                            birthDate = birthDate.trim(),
-                                            rol = "cliente"
+                                            birthDate = bd,
+                                            rol = "cliente" // fijo e invisible
                                         )
                                     )
 
@@ -191,5 +224,21 @@ fun RegisterScreen(
                 }
             }
         }
+
     }
+
 }
+private fun isValidEmail(email: String): Boolean {
+    return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+}
+
+private fun isValidName(text: String): Boolean {
+    val t = text.trim()
+    return t.length >= 2
+}
+
+private fun isValidPassword(pw: String): Boolean {
+    val p = pw.trim()
+    return p.length >= 8 // recomendado
+}
+
