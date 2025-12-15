@@ -7,7 +7,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,143 +16,136 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cl.milsabores.app.core.domain.model.AuthFakeStore
+import cl.milsabores.app.core.ui.theme.Blanco
 import cl.milsabores.app.core.ui.theme.CremaFondo
 import cl.milsabores.app.core.ui.theme.MarronBoton
 import cl.milsabores.app.core.ui.theme.TextoPrincipal
-import cl.milsabores.app.core.ui.theme.Blanco
+import kotlinx.coroutines.launch
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import cl.milsabores.app.core.data.local.AppDatabase
+import cl.milsabores.app.core.data.local.DatabaseProvider
+import cl.milsabores.app.core.domain.session.SessionManager
 
 @Composable
 fun LoginScreen(
-    onLogin: () -> Unit,
+    onLoginSuccess: () -> Unit,
     onGoRegister: () -> Unit,
     onBack: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var loading by remember { mutableStateOf(false) }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    listOf(
-                        CremaFondo,
-                        CremaFondo.copy(alpha = 0.85f)
-                    )
-                )
-            ),
-        contentAlignment = Alignment.Center
-    ) {
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        containerColor = CremaFondo
+    ) { innerPadding ->
 
-        Card(
+        Box(
             modifier = Modifier
-                .fillMaxWidth(0.88f)
-                .padding(20.dp),
-            shape = MaterialTheme.shapes.extraLarge,
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-            colors = CardDefaults.cardColors(containerColor = Blanco)
+                .fillMaxSize()
+                .padding(innerPadding)
+                .background(
+                    Brush.verticalGradient(listOf(CremaFondo, CremaFondo.copy(alpha = 0.85f)))
+                ),
+            contentAlignment = Alignment.Center
         ) {
-
-            Column(
+            Card(
                 modifier = Modifier
-                    .padding(32.dp)
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth(0.88f)
+                    .padding(20.dp),
+                shape = MaterialTheme.shapes.extraLarge,
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                colors = CardDefaults.cardColors(containerColor = Blanco)
             ) {
-
-                // LOGO (sin painterResource)
-
-
-                Spacer(Modifier.height(16.dp))
-
-                Text(
-                    text = "¡Bienvenido de nuevo!",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = TextoPrincipal
-                )
-
-                Text(
-                    text = "Ingresa tus datos para continuar",
-                    fontSize = 14.sp,
-                    color = TextoPrincipal.copy(alpha = 0.7f)
-                )
-
-                Spacer(Modifier.height(22.dp))
-
-                // EMAIL
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Correo Electrónico") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.medium,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MarronBoton,
-                        focusedLabelColor = MarronBoton,
-                        cursorColor = MarronBoton
-                    ),
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Email,
-                            contentDescription = null,
-                            tint = MarronBoton
-                        )
-                    }
-                )
-
-                Spacer(Modifier.height(16.dp))
-
-                // PASSWORD
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text("Contraseña") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = MaterialTheme.shapes.medium,
-                    visualTransformation = PasswordVisualTransformation(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MarronBoton,
-                        focusedLabelColor = MarronBoton,
-                        cursorColor = MarronBoton
-                    ),
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Lock,
-                            contentDescription = null,
-                            tint = MarronBoton
-                        )
-                    }
-                )
-
-                Spacer(Modifier.height(26.dp))
-
-                Button(
-                    onClick = onLogin,
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(52.dp),
-                    shape = MaterialTheme.shapes.large,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MarronBoton
-                    )
+                        .padding(32.dp)
+                        .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        "Iniciar Sesión",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Blanco
+                        text = "¡Bienvenido de nuevo!",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = TextoPrincipal
                     )
-                }
+                    Text(
+                        text = "Ingresa tus datos para continuar",
+                        fontSize = 14.sp,
+                        color = TextoPrincipal.copy(alpha = 0.7f)
+                    )
 
-                Spacer(Modifier.height(14.dp))
+                    Spacer(Modifier.height(22.dp))
 
-                TextButton(onClick = onBack) {
-                    Text("Volver", color = MarronBoton)
-                }
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        label = { Text("Correo Electrónico") },
+                        modifier = Modifier.fillMaxWidth(),
+                        leadingIcon = { Icon(Icons.Default.Email, null, tint = MarronBoton) },
+                        enabled = !loading,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MarronBoton,
+                            focusedLabelColor = MarronBoton,
+                            cursorColor = MarronBoton
+                        )
+                    )
 
-                TextButton(onClick = onGoRegister) {
-                    Text("¿No tienes cuenta? Regístrate aquí", color = MarronBoton)
+                    Spacer(Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = { Text("Contraseña") },
+                        modifier = Modifier.fillMaxWidth(),
+                        visualTransformation = PasswordVisualTransformation(),
+                        leadingIcon = { Icon(Icons.Default.Lock, null, tint = MarronBoton) },
+                        enabled = !loading,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MarronBoton,
+                            focusedLabelColor = MarronBoton,
+                            cursorColor = MarronBoton
+                        )
+                    )
+
+                    Spacer(Modifier.height(26.dp))
+
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                val db = AppDatabase.get(context)
+                                val user = db.userDao().findByEmail(email.trim())
+
+                                if (user != null && user.password == password) {
+                                    SessionManager.currentUser = user
+                                    onLoginSuccess()
+                                } else {
+                                    snackbarHostState.showSnackbar("Credenciales incorrectas")
+                                }
+                            }
+                        },
+                        enabled = !loading,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = MarronBoton)
+                    ) {
+                        Text("Iniciar Sesión", color = Blanco)
+                    }
+
+
+                    Spacer(Modifier.height(14.dp))
+
+                    TextButton(onClick = onBack, enabled = !loading) {
+                        Text("Volver", color = MarronBoton)
+                    }
+                    TextButton(onClick = onGoRegister, enabled = !loading) {
+                        Text("¿No tienes cuenta? Regístrate aquí", color = MarronBoton)
+                    }
                 }
             }
         }

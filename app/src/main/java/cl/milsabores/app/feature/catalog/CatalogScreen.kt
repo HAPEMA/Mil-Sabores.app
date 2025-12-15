@@ -19,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cl.milsabores.app.core.domain.model.Product
 import cl.milsabores.app.core.domain.model.ProductsStore
-import cl.milsabores.app.core.ui.components.MilSaboresTopBar
 import cl.milsabores.app.core.ui.theme.CremaFondo
 import cl.milsabores.app.core.ui.theme.MarronBoton
 import cl.milsabores.app.feature.catalog.components.CategoryDropdownSimple
@@ -46,12 +45,6 @@ fun CatalogScreen(
     ) {
         // HEADER + FORM
         item {
-            MilSaboresTopBar(
-                onGoHome = onGoHome,
-                onGoManage = onGoManage,
-                onGoCart = onGoCart,
-                onGoProfile = onGoProfile
-            )
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,

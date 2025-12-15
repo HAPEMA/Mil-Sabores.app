@@ -11,15 +11,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import cl.milsabores.app.R
+import cl.milsabores.app.core.domain.session.SessionManager
 
 @Composable
 fun MilSaboresTopBar(
-    onGoHome: () -> Unit,
-    onGoManage: () -> Unit,
-    onGoCart: () -> Unit,
-    onGoProfile: () -> Unit
+    onGoHome: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+
+    val canManage = SessionManager.isAdmin
+    // y en el dropdown/menu:
+    if (canManage) { /* mostrar opción gestionar */ }
 
     Row(
         modifier = Modifier
@@ -52,27 +54,6 @@ fun MilSaboresTopBar(
                     onClick = {
                         expanded = false
                         onGoHome()
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Gestionar") },
-                    onClick = {
-                        expanded = false
-                        onGoManage()
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Carrito") },
-                    onClick = {
-                        expanded = false
-                        onGoCart()
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text("Perfil") },
-                    onClick = {
-                        expanded = false
-                        onGoProfile()
                     }
                 )
             }
