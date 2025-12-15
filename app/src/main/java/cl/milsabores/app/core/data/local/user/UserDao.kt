@@ -23,4 +23,8 @@ interface UserDao {
 
     @Update
     suspend fun update(user: UserEntity)
+
+    @Query("UPDATE users SET photoUri = :photoUri WHERE id = :userId")
+    suspend fun updatePhoto(userId: Long, photoUri: String)
+
 }

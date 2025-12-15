@@ -14,7 +14,7 @@ fun MilSaboresApp() {
     MaterialTheme {
         Scaffold(
             topBar = { /* vacío */ },
-            bottomBar = { MilSaboresBottomBar(navController = navController) }
+            bottomBar = { MilSaboresBottomBar(navController) }
         ) { innerPadding ->
             MilSaboresNavHost(
                 navController = navController,

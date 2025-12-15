@@ -14,23 +14,23 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import cl.milsabores.app.core.domain.session.SessionManager
+
+
 @Composable
 fun MilSaboresBottomBar(navController: NavHostController) {
-
-    val items = buildList {
-        add(Screen.Home to Icons.Filled.Home)
-        if (SessionManager.isAdmin) add(Screen.Manage to Icons.Filled.List)
-        add(Screen.Cart to Icons.Filled.ShoppingCart)
-        add(Screen.Profile to Icons.Filled.Person)
-    }
-
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentDestination = navBackStackEntry?.destination
+
+    val items = listOf(
+        Screen.Home to Icons.Filled.Home,
+        Screen.Cart to Icons.Filled.ShoppingCart,
+        Screen.Profile to Icons.Filled.Person
+        // y Screen.Manage solo si admin (luego lo metemos)
+    )
 
     NavigationBar {
         items.forEach { (screen, icon) ->
             val selected = currentDestination.isRouteInHierarchy(screen.route)
-
             NavigationBarItem(
                 selected = selected,
                 onClick = {
@@ -46,6 +46,7 @@ fun MilSaboresBottomBar(navController: NavHostController) {
         }
     }
 }
+
 
 private fun NavDestination?.isRouteInHierarchy(route: String): Boolean =
     this?.hierarchy?.any { it.route == route } == true

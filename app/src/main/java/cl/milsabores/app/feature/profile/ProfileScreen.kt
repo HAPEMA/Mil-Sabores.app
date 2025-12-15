@@ -1,169 +1,97 @@
 package cl.milsabores.app.feature.profile
 
-import androidx.compose.animation.*
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import cl.milsabores.app.core.data.local.DatabaseProvider
+import cl.milsabores.app.core.data.local.purchase.entity.CompraEntity
+import cl.milsabores.app.core.domain.session.SessionManager
 import cl.milsabores.app.core.ui.theme.CremaFondo
+import cl.milsabores.app.feature.profile.components.CompraCard
+import cl.milsabores.app.feature.profile.components.ProfileImageEditor
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(
-    onGoHome: () -> Unit,
-    onGoManage: () -> Unit,
-    onGoCart: () -> Unit,
-    onGoProfile: () -> Unit
+    onLogout: () -> Unit
 ) {
-    var screenVisible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(Unit) {
-        screenVisible = true
+    val user = SessionManager.currentUser
+    var compras by remember { mutableStateOf<List<CompraEntity>>(emptyList()) }
+    var loading by remember { mutableStateOf(false) }
+
+    // Si no hay sesión, afuera
+    LaunchedEffect(user) {
+        if (user == null) {
+            onLogout()
+            return@LaunchedEffect
+        }
+
+        loading = true
+        try {
+            val db = DatabaseProvider.get(context)
+            compras = db.compraDao().getComprasByUsuario(user.id)
+        } finally {
+            loading = false
+        }
     }
+
+    if (user == null) return
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(CremaFondo)
+            .padding(16.dp)
     ) {
 
-
-        AnimatedVisibility(
-            visible = screenVisible,
-            enter = fadeIn() + slideInVertically(initialOffsetY = { it / 3 })
+        @Composable
+        fun ProfileHeader(
+            user: cl.milsabores.app.core.data.local.user.UserEntity,
+            photoContent: @Composable () -> Unit
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                ProfileImage()
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    text = "Dwaith Santiago Lopez",
+            Column {
+                photoContent()
+                Spacer(Modifier.height(12.dp))
+                Text("${user.nombres} ${user.apellidoP} ${user.apellidoM}",
                     style = MaterialTheme.typography.titleMedium
                 )
-
-                Text(
-                    text = "dw.lopez@duocuc.cl",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    text = "Historial de compras:",
-                    style = MaterialTheme.typography.titleSmall,
-                    modifier = Modifier.align(Alignment.Start)
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                OrderCard()
-                Spacer(modifier = Modifier.height(12.dp))
-                OrderCard()
+                Text(user.email, style = MaterialTheme.typography.bodySmall)
             }
         }
-    }
-}
 
-@Composable
-private fun ProfileImage() {
-    var pressed by remember { mutableStateOf(false) }
+        Spacer(Modifier.height(20.dp))
 
-    val scale by animateFloatAsState(
-        targetValue = if (pressed) 0.9f else 1f,
-        label = "profileImageScale"
-    )
+        // ✅ LOGOUT
+        Button(
+            onClick = {
+                SessionManager.logout()
+                onLogout()
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Cerrar sesión")
+        }
 
-    Box(
-        modifier = Modifier
-            .size(110.dp)
-            .scale(scale)
-            .clip(CircleShape)
-            .background(Color.LightGray)
-            .clickable { pressed = !pressed },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "Foto\nperfil",
-            style = MaterialTheme.typography.bodySmall,
-            color = Color.DarkGray
-        )
-    }
-}
+        Spacer(Modifier.height(24.dp))
 
-@Composable
-private fun OrderCard() {
-    var expanded by remember { mutableStateOf(false) }
+        Text("Historial de compras", style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(12.dp))
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .animateContentSize()
-            .clickable { expanded = !expanded },
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "25/06/2025",
-                    style = MaterialTheme.typography.bodySmall
-                )
-
-                Text(
-                    text = if (expanded) "Ocultar" else "Ver detalles",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-
-            Spacer(modifier = Modifier.height(6.dp))
-
-            Text(
-                text = "Productos: 2",
-                style = MaterialTheme.typography.bodySmall
-            )
-
-            Text(
-                text = "Total: 25.500 CLP",
-                style = MaterialTheme.typography.bodySmall
-            )
-
-            AnimatedVisibility(
-                visible = expanded,
-                enter = fadeIn() + expandVertically(),
-                exit = fadeOut() + shrinkVertically()
-            ) {
-                Column {
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    Text(
-                        text = "Orden: #47",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.Gray
-                    )
-                }
+        if (loading) {
+            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+        } else if (compras.isEmpty()) {
+            Text("Aún no tienes compras")
+        } else {
+            compras.forEach { compra ->
+                CompraCard(compra)
             }
         }
     }

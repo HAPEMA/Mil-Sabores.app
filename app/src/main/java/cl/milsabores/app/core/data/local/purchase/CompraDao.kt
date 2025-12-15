@@ -17,13 +17,23 @@ data class CompraConDetalle(
 @Dao
 interface CompraDao {
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert
     suspend fun insertCompra(compra: CompraEntity): Long
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert
     suspend fun insertDetalles(detalles: List<DetalleCompraEntity>)
 
-    @Transaction
-    @Query("SELECT * FROM compras WHERE usuarioId = :userId ORDER BY fechaCreacion DESC")
-    suspend fun getComprasConDetalleByUser(userId: Long): List<CompraConDetalle>
+    @Query("""
+        SELECT * FROM compras 
+        WHERE usuarioId = :userId 
+        ORDER BY fechaCreacion DESC
+    """)
+    suspend fun getComprasByUsuario(userId: Long): List<CompraEntity>
+
+    @Query("""
+        SELECT * FROM detalle_compra 
+        WHERE compraId = :compraId
+    """)
+    suspend fun getDetallesByCompra(compraId: Long): List<DetalleCompraEntity>
 }
+

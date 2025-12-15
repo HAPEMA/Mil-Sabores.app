@@ -31,7 +31,27 @@ fun MilSaboresNavHost(
         startDestination = Screen.Login.route,
         modifier = modifier.padding(innerPadding)
     ) {
-        composable(Screen.Login.route) { /* ... */ }
+
+        composable(Screen.Login.route) {
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Login.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                onGoRegister = { navController.navigate(Screen.Register.route) },
+                onBack = { }
+            )
+        }
+
+        composable(Screen.Register.route) {
+            RegisterScreen(
+                onRegisterSuccess = { navController.popBackStack() },
+                onGoLogin = { navController.popBackStack() },
+                onBack = { navController.popBackStack() }
+            )
+        }
 
         composable(Screen.Home.route) {
             HomeScreen(
@@ -44,7 +64,6 @@ fun MilSaboresNavHost(
             )
         }
 
-        // DETALLE PRODUCTO (sin navArgument)
         composable("product/{productId}") { backStackEntry ->
             val productId = backStackEntry.arguments?.getString("productId") ?: ""
             ProductDetailScreen(
@@ -53,7 +72,35 @@ fun MilSaboresNavHost(
             )
         }
 
-        // GESTIÓN
+        composable(Screen.Cart.route) {
+            CartScreen(
+                onGoHome = { navController.navigate(Screen.Home.route) },
+                onGoManage = { navController.navigate(Screen.Manage.route) },
+                onGoCart = { navController.navigate(Screen.Cart.route) },
+                onGoProfile = { navController.navigate(Screen.Profile.route) }
+            )
+        }
+
+        composable(Screen.Profile.route) {
+            ProfileScreen(
+                onLogout = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true } // o popUpTo(navController.graph.startDestinationId)
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(Screen.Contact.route) {
+            ContactScreen(
+                onGoHome = { navController.navigate(Screen.Home.route) },
+                onGoManage = { navController.navigate(Screen.Manage.route) },
+                onGoCart = { navController.navigate(Screen.Cart.route) },
+                onGoProfile = { navController.navigate(Screen.Profile.route) }
+            )
+        }
+
         composable(Screen.Manage.route) {
             ManageScreen(
                 onGoHome = { navController.navigate(Screen.Home.route) },
@@ -62,11 +109,10 @@ fun MilSaboresNavHost(
                 onGoProfile = { navController.navigate(Screen.Profile.route) },
                 onAddProduct = { navController.navigate(Screen.Catalog.route) },
                 onAddCategory = { navController.navigate(Screen.CategoryManage.route) },
-                onAddAccount = { /* TODO */ }
+                onAddAccount = { }
             )
         }
 
-        // CATALOGO / AGREGAR PRODUCTO
         composable(Screen.Catalog.route) {
             CatalogScreen(
                 onGoHome = { navController.navigate(Screen.Home.route) },
@@ -77,7 +123,6 @@ fun MilSaboresNavHost(
             )
         }
 
-        // CATEGORÍAS
         composable(Screen.CategoryManage.route) {
             CategoryScreen(
                 onGoHome = { navController.navigate(Screen.Home.route) },
@@ -87,57 +132,6 @@ fun MilSaboresNavHost(
                 onDone = { navController.popBackStack() }
             )
         }
-
-        // CARRITO
-        composable(Screen.Cart.route) {
-            CartScreen(
-                onGoHome = { navController.navigate(Screen.Home.route) },
-                onGoManage = { navController.navigate(Screen.Manage.route) },
-                onGoCart = { navController.navigate(Screen.Cart.route) },
-                onGoProfile = { navController.navigate(Screen.Profile.route) }
-            )
-        }
-
-        // PERFIL
-        composable(Screen.Profile.route) {
-            ProfileScreen(
-                onGoHome = { navController.navigate(Screen.Home.route) },
-                onGoManage = { navController.navigate(Screen.Manage.route) },
-                onGoCart = { navController.navigate(Screen.Cart.route) },
-                onGoProfile = { navController.navigate(Screen.Profile.route) }
-            )
-        }
-
-        // CONTACTO
-        composable(Screen.Contact.route) {
-            ContactScreen(
-                onGoHome = { navController.navigate(Screen.Home.route) },
-                onGoManage = { navController.navigate(Screen.Manage.route) },
-                onGoCart = { navController.navigate(Screen.Cart.route) },
-                onGoProfile = { navController.navigate(Screen.Profile.route) }
-            )
-        }
-
-        // LOGIN
-        composable(Screen.Login.route) {
-            LoginScreen(
-                onLoginSuccess = {
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.Login.route) { inclusive = true }
-                    }
-                },
-                onGoRegister = { navController.navigate(Screen.Register.route) },
-                onBack = { /* opcional */ }
-            )
-        }
-
-        composable(Screen.Register.route) {
-            RegisterScreen(
-                onRegisterSuccess = { /* si quieres ir directo a home */ },
-                onGoLogin = { navController.popBackStack() },
-                onBack = { navController.popBackStack() }
-            )
-        }
-
     }
 }
+
