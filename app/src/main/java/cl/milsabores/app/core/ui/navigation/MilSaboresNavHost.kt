@@ -85,12 +85,13 @@ fun MilSaboresNavHost(
             ProfileScreen(
                 onLogout = {
                     navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Home.route) { inclusive = true } // o popUpTo(navController.graph.startDestinationId)
+                        popUpTo(navController.graph.startDestinationId) { inclusive = true }
                         launchSingleTop = true
                     }
                 }
             )
         }
+
 
         composable(Screen.Contact.route) {
             ContactScreen(

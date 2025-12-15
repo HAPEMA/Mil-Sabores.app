@@ -27,4 +27,6 @@ interface UserDao {
     @Query("UPDATE users SET photoUri = :photoUri WHERE id = :userId")
     suspend fun updatePhoto(userId: Long, photoUri: String)
 
+
+
 }

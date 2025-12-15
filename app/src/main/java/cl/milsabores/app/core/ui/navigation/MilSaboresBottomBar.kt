@@ -21,12 +21,18 @@ fun MilSaboresBottomBar(navController: NavHostController) {
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentDestination = navBackStackEntry?.destination
 
-    val items = listOf(
-        Screen.Home to Icons.Filled.Home,
-        Screen.Cart to Icons.Filled.ShoppingCart,
-        Screen.Profile to Icons.Filled.Person
-        // y Screen.Manage solo si admin (luego lo metemos)
-    )
+    val items = buildList {
+        add(Screen.Home to Icons.Filled.Home)
+
+        if (SessionManager.isAdmin) {
+            add(Screen.Manage to Icons.Filled.List)
+        }
+
+        add(Screen.Cart to Icons.Filled.ShoppingCart)
+        add(Screen.Profile to Icons.Filled.Person)
+    }
+
+
 
     NavigationBar {
         items.forEach { (screen, icon) ->
